@@ -15,7 +15,7 @@
         <div class="modal-body">
           <div class="row">
             <div class="col-md-3">
-              <img :src="curImage || imageUrl" class="img-fluid" :alt="`${title} photo`" />
+              <img :src="getImageUrl" class="img-fluid" :alt="`${title} photo`" />
             </div>
             <div class="col-md-9 d-flex flex-column p-3 fs-5">
               <p><span class="fw-bold">商品描述</span> : {{ description }}</p>
@@ -102,6 +102,16 @@
         modal: {},
         curImage: '',
       };
+    },
+    computed: {
+      getImageUrl() {
+        return this.curImage === '' ? this.imageUrl : this.curImage;
+      }
+    },
+    watch: {
+      imageUrl() {
+        this.curImage = this.imageUrl;
+      },
     },
     methods: {
       showModal() {
