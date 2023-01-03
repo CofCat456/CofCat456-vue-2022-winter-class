@@ -15,21 +15,20 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="(item, index) in products" :key="item.id">
+            <tr v-for="(product, index) in products" :key="product.id">
               <td>{{ index + 1 }}</td>
-              <td>{{ item.title }}</td>
+              <td>{{ product.title }}</td>
               <td>
-                {{ item.origin_price }}
+                {{ product.origin_price }}
               </td>
               <td>
-                {{ item.price }}
+                {{ product.price }}
               </td>
               <td>
-                <span v-if="item.is_enabled" class="text-success">啟用</span>
-                <span v-else>未啟用</span>
+                <span :class="`text-${ product.is_enabled ? 'success' : 'muted' }`">{{ product.is_enabled ? '啟用' : '未啟用' }}</span>
               </td>
               <td>
-                <button type="button" class="btn btn-primary" @click="watchProductDetail(item)">
+                <button type="button" class="btn btn-primary" @click="watchProductDetail(product)">
                   查看細節
                 </button>
               </td>
