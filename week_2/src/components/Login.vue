@@ -4,6 +4,9 @@ import { yupResolver } from '@vorms/resolvers/yup';
 import * as yup from 'yup';
 import { loginApi } from '../api';
 import Swal from 'sweetalert2';
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
 
 const schema = yup.object().shape({
   account: yup.string().email('請輸入正確的 Email 格式 ㅍ_ㅍ!!').required('請輸入 Email !!'),
@@ -37,9 +40,11 @@ const { errors, register, handleSubmit, handleReset } = useForm({
             title: '登入成功 (*‘ v`*)',
           });
           document.cookie = `token=${token};expires=${new Date(expired)};`;
+          router.push('/vue-2022-winter-class/week_2/productList');
         }
       })
       .catch((err) => {
+        console.log(err);
         const {
           response: { message },
         } = err;

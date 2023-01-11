@@ -10,7 +10,7 @@ const routes = [
     component: Login,
   },
   {
-    path: '/vue-2022-winter-class/week_2/ProductList',
+    path: '/vue-2022-winter-class/week_2/productList',
     name: 'ProductList',
     component: ProductList,
   },
