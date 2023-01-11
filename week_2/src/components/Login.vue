@@ -3,6 +3,7 @@ import { useForm } from '@vorms/core';
 import { yupResolver } from '@vorms/resolvers/yup';
 import * as yup from 'yup';
 import { loginApi } from '../api';
+import Swal from 'sweetalert2';
 
 const schema = yup.object().shape({
   account: yup.string().email('請輸入正確的 Email 格式 ㅍ_ㅍ!!').required('請輸入 Email !!'),
@@ -20,13 +21,39 @@ const { errors, register, handleSubmit, handleReset } = useForm({
     loginApi({
       username: account,
       password,
-    }).then((res) => {
-      const {
-        data: { token, expired },
-      } = res;
-      document.cookie = `token=${token};expires=${new Date(expired)};`;
-      console.log(res);
-    });
+    })
+      .then((res) => {
+        const {
+          data: { success, token, expired },
+        } = res;
+        if (success) {
+          Swal.fire({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 1500,
+            timerProgressBar: true,
+            icon: 'success',
+            title: '登入成功 (*‘ v`*)',
+          });
+          document.cookie = `token=${token};expires=${new Date(expired)};`;
+        }
+      })
+      .catch((err) => {
+        const {
+          response: { message },
+        } = err;
+        Swal.fire({
+          toast: true,
+          position: 'top-end',
+          showConfirmButton: false,
+          timer: 1500,
+          timerProgressBar: true,
+          icon: 'error',
+          title: '登入失敗',
+          text: message,
+        });
+      });
   },
 });
 
