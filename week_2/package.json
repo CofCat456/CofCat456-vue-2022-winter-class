@@ -12,6 +12,7 @@
     "@popperjs/core": "^2.11.6",
     "@vorms/core": "^1.0.0",
     "@vorms/resolvers": "^1.0.0",
+    "axios": "^1.2.2",
     "bootstrap": "^5.2.3",
     "prettier": "^2.8.1",
     "sass": "^1.57.1",

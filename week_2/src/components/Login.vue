@@ -2,34 +2,36 @@
 import { useForm } from '@vorms/core';
 import { yupResolver } from '@vorms/resolvers/yup';
 import * as yup from 'yup';
+import { loginApi } from '../api';
 
 const schema = yup.object().shape({
   account: yup.string().email('請輸入正確的 Email 格式 ㅍ_ㅍ!!').required('請輸入 Email !!'),
   password: yup.string('').min(6, '密碼長度不得小於 6').required('請輸入密碼!!'),
 });
 
-const { errors, drity, register, handleSubmit, handleReset } = useForm({
+const { errors, register, handleSubmit, handleReset } = useForm({
   initialValues: {
     account: '',
-    password: 30,
+    password: '',
   },
   validate: yupResolver(schema),
   onSubmit(values) {
-    console.log(values);
+    const { account, password } = values;
+    loginApi({
+      username: account,
+      password,
+    }).then((res) => {
+      const {
+        data: { token, expired },
+      } = res;
+      document.cookie = `token=${token};expires=${new Date(expired)};`;
+      console.log(res);
+    });
   },
 });
 
-// Basic usage
-// The `attrs` need to be bind on <input> to support `validateMode`
-// and `reValidateMode`.
 const { value: account, attrs: accountFieldAttrs } = register('account');
-
-// Add field level validation.
-const { value: password, attrs: passwordFieldAttrs } = register('password', {
-  validate(value) {
-    return value > 100 ? 'This max number is 100' : undefined;
-  },
-});
+const { value: password, attrs: passwordFieldAttrs } = register('password');
 </script>
 
 <template>
@@ -63,6 +65,7 @@ const { value: password, attrs: passwordFieldAttrs } = register('password', {
             <div class="feedback">{{ errors.password }}</div>
           </div>
           <button class="btn btn-lg btn-primary w-100 mt-3" type="submit">登入</button>
+          <button class="btn btn-lg btn-secondary w-100 mt-3" type="reset">重置</button>
         </form>
       </div>
     </div>
