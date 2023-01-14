@@ -14,7 +14,7 @@
     "@vorms/resolvers": "^1.0.0",
     "axios": "^1.2.2",
     "bootstrap": "^5.2.3",
-    "prettier": "^2.8.1",
+    "eslint-plugin-prettier": "^4.2.1",
     "sass": "^1.57.1",
     "sweetalert2": "^11.7.0",
     "vue": "^3.2.45",
@@ -23,12 +23,11 @@
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^4.0.0",
+    "@vue/eslint-config-prettier": "^7.0.0",
     "eslint": "^8.31.0",
-    "eslint-config-airbnb-base": "^15.0.0",
-    "eslint-config-prettier": "^8.6.0",
-    "eslint-import-resolver-alias": "^1.1.2",
-    "eslint-plugin-import": "^2.27.4",
+    "eslint-config-standard": "^17.0.0",
     "eslint-plugin-vue": "^9.9.0",
+    "prettier": "^2.8.3",
     "vite": "^4.0.0"
   }
 }
