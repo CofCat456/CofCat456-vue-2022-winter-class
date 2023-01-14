@@ -1,10 +1,12 @@
 <script setup>
+import { useRouter } from 'vue-router';
 import { useForm } from '@vorms/core';
 import { yupResolver } from '@vorms/resolvers/yup';
 import * as yup from 'yup';
-import { loginApi } from '../api';
+
 import Swal from 'sweetalert2';
-import { useRouter } from 'vue-router';
+
+import { loginApi } from '../api';
 
 const router = useRouter();
 
@@ -44,7 +46,6 @@ const { errors, register, handleSubmit, handleReset } = useForm({
         }
       })
       .catch((err) => {
-        console.log(err);
         const {
           response: { message },
         } = err;
@@ -67,7 +68,7 @@ const { value: password, attrs: passwordFieldAttrs } = register('password');
 </script>
 
 <template>
-  <section class="container">
+  <section class="container position-absolute top-50 start-50 translate-middle text-center">
     <div class="row justify-content-center">
       <h1 class="h3 mb-3 font-weight-normal">請先登入</h1>
       <div class="col-8">
@@ -106,6 +107,12 @@ const { value: password, attrs: passwordFieldAttrs } = register('password');
 </template>
 
 <style scoped>
+.form-signin {
+  width: 100%;
+  max-width: 330px;
+  padding: 15px;
+  margin: auto;
+}
 .form-signin {
   width: 100%;
   max-width: 330px;
