@@ -87,6 +87,15 @@ export default {
     },
     logout() {
       logoutApi().then(() => {
+        Swal.fire({
+          toast: true,
+          position: 'top-end',
+          showConfirmButton: false,
+          timer: 1500,
+          timerProgressBar: true,
+          icon: 'success',
+          title: '登出成功 ฅ●ω●ฅ',
+        });
         this.$router.push({ name: 'Login' });
       });
     },
