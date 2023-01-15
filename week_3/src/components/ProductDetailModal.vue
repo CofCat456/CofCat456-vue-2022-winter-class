@@ -22,9 +22,9 @@
               <p><span class="fw-bold">商品內容</span> : {{ content }}</p>
               <div class="d-flex justify-content-between mt-auto">
                 <div class="d-flex gap-3">
-                  <p class="mb-0 text-decoration-line-through">${{ origin_price }}</p>
+                  <p class="mb-0 text-decoration-line-through">{{ getOriginPrice }}</p>
                   <p>
-                    <span class="text-danger">${{ price }}</span> / {{ unit }}
+                    <span class="text-danger">{{ getPrice }}</span> / {{ unit }}
                   </p>
                 </div>
               </div>
@@ -52,6 +52,7 @@
 
 <script>
 import { Modal } from 'bootstrap';
+import { currency } from '../global';
 
 export default {
   props: {
@@ -99,6 +100,12 @@ export default {
     };
   },
   computed: {
+    getOriginPrice() {
+      return currency(this.origin_price, '$');
+    },
+    getPrice() {
+      return currency(this.price, '$');
+    },
     getImageUrl() {
       return this.curImage === '' ? this.imageUrl : this.curImage;
     }

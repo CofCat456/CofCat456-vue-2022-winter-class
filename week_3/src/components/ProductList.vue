@@ -23,10 +23,10 @@
               <td>{{ index + 1 }}</td>
               <td>{{ product.title }}</td>
               <td>
-                {{ product.origin_price }}
+                {{ getOriginPrice(product.origin_price) }}
               </td>
               <td>
-                {{ product.price }}
+                {{ getPrice(product.price) }}
               </td>
               <td>
                 <span
@@ -86,6 +86,7 @@ import ProductModal from './ProductModal.vue';
 import ProductDetailModal from './ProductDetailModal.vue';
 import ProudctDeleteModal from './ProductDeleteModal.vue';
 import Swal from 'sweetalert2';
+import { currency } from '../global';
 
 import {
   setDefaultAuth,
@@ -143,6 +144,12 @@ export default {
         });
         this.$router.push({ name: 'Login' });
       });
+    },
+    getOriginPrice(originPrice) {
+      return currency(originPrice, '$ ');
+    },
+    getPrice(price) {
+      return currency(price, '$ ');
     },
     getProduct() {
       getProductApi()
