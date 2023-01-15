@@ -170,7 +170,7 @@
 </template>
 
 <script>
-import { Modal } from 'bootstrap';
+import ModalMixin from '../mixins/ModalMixins';
 
 export default {
   props: {
@@ -227,6 +227,7 @@ export default {
       default: 0
     }
   },
+  mixins: [ModalMixin],
   data() {
     return {
       modal: {},
@@ -267,13 +268,7 @@ export default {
     showModal() {
       this.modal.show();
       this.initProduct();
-    },
-    hideModal() {
-      this.modal.hide();
     }
-  },
-  mounted() {
-    this.modal = new Modal(this.$refs.modal);
   }
 };
 </script>

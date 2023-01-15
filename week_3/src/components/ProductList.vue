@@ -39,12 +39,12 @@
               </td>
               <td>
                 <div class="btn-group">
-                  <button class="btn btn-outline-primary btn-sm" @click="openEditModel(product.id)">
+                  <button class="btn btn-outline-primary btn-sm" @click="openEditModal(product.id)">
                     編輯
                   </button>
                   <button
                     class="btn btn-outline-danger btn-sm"
-                    @click="openDeleteModel(product.id)"
+                    @click="openDeleteModal(product.id)"
                   >
                     刪除
                   </button>
@@ -166,10 +166,10 @@ export default {
     openAddModel() {
       this.$refs.newProductModal.showModal();
     },
-    openEditModel(id) {
+    openEditModal(id) {
       this.$refs[`productModal-${id}`][0].showModal();
     },
-    openDeleteModel(id) {
+    openDeleteModal(id) {
       this.$refs[`productDeleteModal-${id}`][0].showModal();
     },
     watchDetail(id) {

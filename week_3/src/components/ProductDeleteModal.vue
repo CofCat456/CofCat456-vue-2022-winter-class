@@ -36,7 +36,7 @@
 </template>
 
 <script>
-import { Modal } from 'bootstrap';
+import ModalMixin from '../mixins/ModalMixins';
 
 export default {
   props: {
@@ -49,6 +49,7 @@ export default {
       default: ''
     }
   },
+  mixins: [ModalMixin],
   data() {
     return {
       modal: {}
@@ -59,16 +60,7 @@ export default {
       if (this.id.length === 0) return;
       this.$emit('delete', this.id);
       this.hideModal();
-    },
-    showModal() {
-      this.modal.show();
-    },
-    hideModal() {
-      this.modal.hide();
     }
-  },
-  mounted() {
-    this.modal = new Modal(this.$refs.modal);
   }
 };
 </script>

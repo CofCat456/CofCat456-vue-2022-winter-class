@@ -51,7 +51,7 @@
 </template>
 
 <script>
-import { Modal } from 'bootstrap';
+import ModalMixin from '../mixins/ModalMixins';
 import { currency } from '../global';
 
 export default {
@@ -93,6 +93,7 @@ export default {
       default: ''
     }
   },
+  mixins: [ModalMixin],
   data() {
     return {
       modal: {},
@@ -111,18 +112,9 @@ export default {
     }
   },
   methods: {
-    showModal() {
-      this.modal.show();
-    },
-    hideModal() {
-      this.modal.hide();
-    },
     changeImage(image) {
       this.curImage = image;
     }
-  },
-  mounted() {
-    this.modal = new Modal(this.$refs.modal);
   }
 };
 </script>
