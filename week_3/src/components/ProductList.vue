@@ -11,6 +11,7 @@
             <tr>
               <th scope="col">#</th>
               <th scope="col">產品名稱</th>
+              <th scope="col">分類</th>
               <th scope="col">原價</th>
               <th scope="col">售價</th>
               <th scope="col">是否啟用</th>
@@ -22,6 +23,9 @@
             <tr v-for="(product, index) in products" :key="product.id">
               <td>{{ index + 1 }}</td>
               <td>{{ product.title }}</td>
+              <td>
+                <span class="badge rounded-pill bg-info text-dark">{{ product.category }}</span>
+              </td>
               <td>
                 {{ getOriginPrice(product.origin_price) }}
               </td>
