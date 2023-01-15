@@ -4,7 +4,7 @@
       <div class="col-md-8">
         <h2>產品列表</h2>
         <div class="text-end mt-4">
-          <button class="btn btn-primary" @click="openNewProductModel">建立新的產品</button>
+          <button class="btn btn-primary" @click="openAddModel">建立新的產品</button>
         </div>
         <table class="table table-hover mt-4 align-middle text-center">
           <thead>
@@ -42,7 +42,10 @@
                   <button class="btn btn-outline-primary btn-sm" @click="editProduct(product.id)">
                     編輯
                   </button>
-                  <button class="btn btn-outline-danger btn-sm" @click="deleteProduct(product.id)">
+                  <button
+                    class="btn btn-outline-danger btn-sm"
+                    @click="openDeleteModel(product.id)"
+                  >
                     刪除
                   </button>
                 </div>
@@ -55,7 +58,9 @@
               <ProductModal :ref="`productModal-${product.id}`" />
               <ProudctDeleteModal
                 :ref="`productDeleteModal-${product.id}`"
+                :id="product.id"
                 :title="product.title"
+                @delete="deleteProduct"
               />
               <ProductDetailModal :ref="`productDetailModal-${product.id}`" v-bind="product" />
             </tr>
@@ -77,7 +82,14 @@ import ProductDetailModal from './ProductDetailModal.vue';
 import ProudctDeleteModal from './ProductDeleteModal.vue';
 import Swal from 'sweetalert2';
 
-import { setDefaultAuth, getProductApi, checkLoginApi, logoutApi, addProductApi } from '../api';
+import {
+  setDefaultAuth,
+  getProductApi,
+  checkLoginApi,
+  logoutApi,
+  addProductApi,
+  deleteProductApi
+} from '../api';
 
 export default {
   components: {
@@ -138,13 +150,13 @@ export default {
           console.log(err);
         });
     },
-    openNewProductModel() {
+    openAddModel() {
       this.$refs.newProductModal.showModal();
     },
     editProduct(id) {
       this.$refs[`productModal-${id}`][0].showModal();
     },
-    deleteProduct(id) {
+    openDeleteModel(id) {
       this.$refs[`productDeleteModal-${id}`][0].showModal();
     },
     watchDetail(id) {
@@ -182,6 +194,38 @@ export default {
             timerProgressBar: true,
             icon: 'error',
             title: '新增失敗',
+            text: message
+          });
+        });
+    },
+    deleteProduct(id) {
+      deleteProductApi(id)
+        .then(() => {
+          Swal.fire({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 1500,
+            timerProgressBar: true,
+            icon: 'success',
+            title: '刪除成功(*’ｰ’*)！'
+          });
+          this.getProduct();
+        })
+        .catch((err) => {
+          const {
+            response: {
+              data: { message }
+            }
+          } = err;
+          Swal.fire({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 1500,
+            timerProgressBar: true,
+            icon: 'error',
+            title: '刪除失敗',
             text: message
           });
         });

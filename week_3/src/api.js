@@ -7,7 +7,7 @@ const loginUrl = `${apiUrl}/admin/signin`;
 const logoutUrl = `${apiUrl}/logout`;
 const getProductUrl = `${apiUrl}/api/${apiPath}/admin/products/all`;
 const checkLoginUrl = `${apiUrl}/api/user/check`;
-const addProductUrl = `${apiUrl}/api/${apiPath}/admin/product`;
+const adminProductUrl = `${apiUrl}/api/${apiPath}/admin/product`;
 
 export function setDefaultAuth(token) {
   axios.defaults.headers.common.Authorization = token;
@@ -17,4 +17,5 @@ export const loginApi = (data) => axios.post(loginUrl, data);
 export const logoutApi = () => axios.post(logoutUrl);
 export const getProductApi = () => axios.get(getProductUrl);
 export const checkLoginApi = () => axios.post(checkLoginUrl);
-export const addProductApi = (data) => axios.post(addProductUrl, data);
+export const addProductApi = (data) => axios.post(adminProductUrl, data);
+export const deleteProductApi = (id) => axios.delete(`${adminProductUrl}/${id}`);

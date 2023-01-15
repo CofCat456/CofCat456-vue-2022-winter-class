@@ -28,7 +28,7 @@
           <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
             取消
           </button>
-          <button type="button" class="btn btn-danger">確認刪除</button>
+          <button type="button" class="btn btn-danger" @click="deleteHandler">確認刪除</button>
         </div>
       </div>
     </div>
@@ -40,6 +40,10 @@ import { Modal } from 'bootstrap';
 
 export default {
   props: {
+    id: {
+      type: String,
+      default: ''
+    },
     title: {
       type: String,
       default: ''
@@ -51,6 +55,11 @@ export default {
     };
   },
   methods: {
+    deleteHandler() {
+      if (this.id.length === 0) return;
+      this.$emit('delete', this.id);
+      this.hideModal();
+    },
     showModal() {
       this.modal.show();
     },
