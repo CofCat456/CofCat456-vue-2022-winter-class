@@ -39,7 +39,7 @@
               </td>
               <td>
                 <div class="btn-group">
-                  <button class="btn btn-outline-primary btn-sm" @click="editProduct(product.id)">
+                  <button class="btn btn-outline-primary btn-sm" @click="openEditModel(product.id)">
                     編輯
                   </button>
                   <button
@@ -55,7 +55,12 @@
                   查看細節
                 </button>
               </td>
-              <ProductModal :ref="`productModal-${product.id}`" />
+              <ProductModal
+                editMode
+                :ref="`productModal-${product.id}`"
+                v-bind="product"
+                @edit="editProduct"
+              />
               <ProudctDeleteModal
                 :ref="`productDeleteModal-${product.id}`"
                 :id="product.id"
@@ -88,6 +93,7 @@ import {
   checkLoginApi,
   logoutApi,
   addProductApi,
+  editProductApi,
   deleteProductApi
 } from '../api';
 
@@ -153,7 +159,7 @@ export default {
     openAddModel() {
       this.$refs.newProductModal.showModal();
     },
-    editProduct(id) {
+    openEditModel(id) {
       this.$refs[`productModal-${id}`][0].showModal();
     },
     openDeleteModel(id) {
@@ -194,6 +200,46 @@ export default {
             timerProgressBar: true,
             icon: 'error',
             title: '新增失敗',
+            text: message
+          });
+        });
+    },
+    editProduct(product) {
+      const {
+        data: { id }
+      } = product;
+      editProductApi(id, product)
+        .then((res) => {
+          const {
+            data: { message = ' ' }
+          } = res;
+          Swal.fire({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 1500,
+            timerProgressBar: true,
+            icon: 'success',
+            title: message
+          });
+          this.$refs[`productModal-${id}`][0].hideModal();
+          this.getProduct();
+        })
+        .catch((err) => {
+          console.log(err);
+          const {
+            response: {
+              data: { message }
+            }
+          } = err;
+          Swal.fire({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 1500,
+            timerProgressBar: true,
+            icon: 'error',
+            title: '編輯失敗',
             text: message
           });
         });

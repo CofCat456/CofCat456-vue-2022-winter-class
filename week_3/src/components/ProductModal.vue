@@ -45,14 +45,19 @@
                   新增圖片
                 </button>
               </div>
-              <div v-for="image in imagesUrl" :key="image" class="my-3">
+              <div v-for="(image, index) in imagesUrl" :key="image" class="my-3">
                 <input
                   type="text"
-                  class="form-control pe-none mb-2"
+                  class="form-control mb-2"
                   placeholder="請輸入圖片連結"
-                  :value="image"
+                  :value="imagesUrl[index]"
                 />
-                <button class="btn btn-outline-danger btn-sm d-block w-100">刪除圖片</button>
+                <button
+                  class="btn btn-outline-danger btn-sm d-block w-100"
+                  @click="deleteImage(index)"
+                >
+                  刪除圖片
+                </button>
               </div>
             </div>
             <div class="col-sm-8">
@@ -173,6 +178,10 @@ export default {
       type: Boolean,
       default: false
     },
+    id: {
+      type: String,
+      default: ''
+    },
     title: {
       type: String,
       default: ''
@@ -214,8 +223,8 @@ export default {
       default: 0
     },
     is_enabled: {
-      type: Boolean,
-      default: false
+      type: Number,
+      default: 0
     }
   },
   data() {
@@ -227,6 +236,7 @@ export default {
   },
   methods: {
     initProduct() {
+      this.product.id = this.id;
       this.product.title = this.title;
       this.product.imageUrl = this.imageUrl;
       this.product.imagesUrl = this.imagesUrl;
@@ -243,14 +253,15 @@ export default {
       this.product.imagesUrl.push(this.tempImage);
       this.tempImage = '';
     },
+    deleteImage(index) {
+      this.product.imagesUrl.splice(index, 1);
+    },
     confirmHandler() {
       const { imagesUrl } = this.product;
       const [imageUrl] = imagesUrl;
       this.product.imageUrl = imageUrl;
-      this.$emit('add', {
-        data: {
-          ...this.product
-        }
+      this.$emit(`${this.editMode ? 'edit' : 'add'}`, {
+        data: this.product
       });
     },
     showModal() {

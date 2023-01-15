@@ -27,7 +27,6 @@
                     <span class="text-danger">${{ price }}</span> / {{ unit }}
                   </p>
                 </div>
-                <p>剩餘 : {{ num }} {{ unit }}</p>
               </div>
               <div class="mb-3 border-bottom border-bottom-1"></div>
               <div class="d-flex gap-3">
@@ -91,10 +90,6 @@ export default {
     unit: {
       type: String,
       default: ''
-    },
-    num: {
-      type: Number,
-      default: 0
     }
   },
   data() {

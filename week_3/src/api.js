@@ -18,4 +18,5 @@ export const logoutApi = () => axios.post(logoutUrl);
 export const getProductApi = () => axios.get(getProductUrl);
 export const checkLoginApi = () => axios.post(checkLoginUrl);
 export const addProductApi = (data) => axios.post(adminProductUrl, data);
+export const editProductApi = (id, data) => axios.put(`${adminProductUrl}/${id}`, data);
 export const deleteProductApi = (id) => axios.delete(`${adminProductUrl}/${id}`);
