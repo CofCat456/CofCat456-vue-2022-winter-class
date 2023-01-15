@@ -3,6 +3,9 @@
     <div class="row justify-content-center py-5">
       <div class="col-md-8">
         <h2>產品列表</h2>
+        <div class="text-end mt-4">
+          <button class="btn btn-primary" @click="addProduct">建立新的產品</button>
+        </div>
         <table class="table table-hover mt-4 align-middle text-center">
           <thead>
             <tr>
@@ -11,6 +14,7 @@
               <th scope="col">原價</th>
               <th scope="col">售價</th>
               <th scope="col">是否啟用</th>
+              <th scope="col">編輯</th>
               <th scope="col">查看細節</th>
             </tr>
           </thead>
@@ -25,30 +29,52 @@
                 {{ product.price }}
               </td>
               <td>
-                <span :class="`text-${product.is_enabled ? 'success' : 'muted'}`">{{
-                  product.is_enabled ? '啟用' : '未啟用'
-                }}</span>
+                <span
+                  :class="[
+                    'badge rounded-pill px-3 py-1',
+                    `bg-${product.is_enabled ? 'success' : 'secondary'}`
+                  ]"
+                  >{{ product.is_enabled ? '啟用' : '未啟用' }}</span
+                >
               </td>
               <td>
-                <button type="button" class="btn btn-primary" @click="watchProductDetail(product)">
+                <div class="btn-group">
+                  <button class="btn btn-outline-primary btn-sm" @click="editProduct(product.id)">
+                    編輯
+                  </button>
+                  <button class="btn btn-outline-danger btn-sm" @click="deleteProduct(product.id)">
+                    刪除
+                  </button>
+                </div>
+              </td>
+              <td>
+                <button type="button" class="btn btn-primary" @click="watchDetail(product.id)">
                   查看細節
                 </button>
               </td>
+              <ProductModal :ref="`productModal-${product.id}`" />
+              <ProudctDeleteModal
+                :ref="`productDeleteModal-${product.id}`"
+                :title="product.title"
+              />
+              <ProductDetailModal :ref="`productDetailModal-${product.id}`" v-bind="product" />
             </tr>
           </tbody>
         </table>
         <p>
-          目前有 <span>{{ products.length }}</span> 項產品
+          目前有 <span class="text-info">{{ products.length }}</span> 項產品
         </p>
       </div>
     </div>
     <button type="button" class="btn btn-outline-secondary logoutBtn" @click="logout">登出</button>
-    <ProductModal ref="productModal" v-bind="tempProduct" />
+    <ProductModal ref="newProductModal" />
   </div>
 </template>
 
 <script>
 import ProductModal from './ProductModal.vue';
+import ProductDetailModal from './ProductDetailModal.vue';
+import ProudctDeleteModal from './ProductDeleteModal.vue';
 import Swal from 'sweetalert2';
 
 import { setDefaultAuth, getProductApi, checkLoginApi, logoutApi } from '../api';
@@ -56,11 +82,12 @@ import { setDefaultAuth, getProductApi, checkLoginApi, logoutApi } from '../api'
 export default {
   components: {
     ProductModal,
+    ProductDetailModal,
+    ProudctDeleteModal
   },
   data() {
     return {
-      products: [],
-      tempProduct: {},
+      products: []
     };
   },
   methods: {
@@ -72,7 +99,7 @@ export default {
         timer: 1500,
         timerProgressBar: true,
         icon: 'error',
-        title: 'token 已過期 (′゜ω。‵)',
+        title: 'token 已過期 (′゜ω。‵)'
       });
       this.$router.push({ name: 'Login' });
     },
@@ -94,7 +121,7 @@ export default {
           timer: 1500,
           timerProgressBar: true,
           icon: 'success',
-          title: '登出成功 ฅ●ω●ฅ',
+          title: '登出成功 ฅ●ω●ฅ'
         });
         this.$router.push({ name: 'Login' });
       });
@@ -103,7 +130,7 @@ export default {
       getProductApi()
         .then((res) => {
           const {
-            data: { products },
+            data: { products }
           } = res;
           this.products = Object.values(products);
         })
@@ -111,10 +138,18 @@ export default {
           console.log(err);
         });
     },
-    watchProductDetail(item) {
-      this.tempProduct = item;
-      this.$refs.productModal.showModal();
+    addProduct() {
+      this.$refs.newProductModal.showModal();
     },
+    editProduct(id) {
+      this.$refs[`productModal-${id}`][0].showModal();
+    },
+    deleteProduct(id) {
+      this.$refs[`productDeleteModal-${id}`][0].showModal();
+    },
+    watchDetail(id) {
+      this.$refs[`productDetailModal-${id}`][0].showModal();
+    }
   },
   mounted() {
     const token = document.cookie.replace(/(?:(?:^|.*;\s*)token\s*\=\s*([^;]*).*$)|^.*$/, '$1');
@@ -126,7 +161,7 @@ export default {
 
     setDefaultAuth(token);
     this.checkLogin();
-  },
+  }
 };
 </script>
 

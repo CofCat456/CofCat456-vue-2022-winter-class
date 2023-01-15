@@ -1,4 +1,5 @@
 <script setup>
+import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { useForm } from '@vorms/core';
 import { yupResolver } from '@vorms/resolvers/yup';
@@ -9,6 +10,7 @@ import Swal from 'sweetalert2';
 import { loginApi } from '../api';
 
 const router = useRouter();
+const loadingStatus = ref(false);
 
 const schema = yup.object().shape({
   account: yup.string().email('請輸入正確的 Email 格式 ㅍ_ㅍ!!').required('請輸入 Email !!'),
@@ -22,6 +24,7 @@ const { errors, register, handleSubmit, handleReset } = useForm({
   },
   validate: yupResolver(schema),
   onSubmit(values) {
+    loadingStatus.value = true;
     const { account, password } = values;
     loginApi({
       username: account,
@@ -42,6 +45,7 @@ const { errors, register, handleSubmit, handleReset } = useForm({
             title: '登入成功 (*‘ v`*)'
           });
           document.cookie = `token=${token};expires=${new Date(expired)};`;
+          loadingStatus.value = false;
           router.push({ name: 'ProductList' });
         }
       })
@@ -59,6 +63,8 @@ const { errors, register, handleSubmit, handleReset } = useForm({
           title: '登入失敗',
           text: message
         });
+
+        loadingStatus.value = false;
       });
   }
 });
@@ -97,7 +103,15 @@ const { value: password, attrs: passwordFieldAttrs } = register('password');
             <label for="password">Password</label>
             <div class="feedback">{{ errors.password }}</div>
           </div>
-          <button class="btn btn-lg btn-primary w-100 mt-3" type="submit">登入</button>
+          <button
+            v-if="loadingStatus"
+            class="btn btn-lg w-100 mt-3 btn-primary"
+            type="button"
+            disabled
+          >
+            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+          </button>
+          <button v-else class="btn btn-lg btn-primary w-100 mt-3" type="submit">登入</button>
           <button class="btn btn-lg btn-secondary w-100 mt-3" type="reset">重置</button>
         </form>
       </div>
