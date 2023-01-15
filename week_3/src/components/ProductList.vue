@@ -157,6 +157,12 @@ export default {
           const {
             data: { products }
           } = res;
+
+          if (products === null) {
+            this.products = [];
+            return;
+          }
+
           this.products = Object.values(products);
         })
         .catch((err) => {
