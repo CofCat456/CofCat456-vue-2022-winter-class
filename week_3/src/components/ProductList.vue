@@ -4,7 +4,7 @@
       <div class="col-md-8">
         <h2>產品列表</h2>
         <div class="text-end mt-4">
-          <button class="btn btn-primary" @click="addProduct">建立新的產品</button>
+          <button class="btn btn-primary" @click="openNewProductModel">建立新的產品</button>
         </div>
         <table class="table table-hover mt-4 align-middle text-center">
           <thead>
@@ -67,7 +67,7 @@
       </div>
     </div>
     <button type="button" class="btn btn-outline-secondary logoutBtn" @click="logout">登出</button>
-    <ProductModal ref="newProductModal" />
+    <ProductModal ref="newProductModal" @add="addProduct" />
   </div>
 </template>
 
@@ -77,7 +77,7 @@ import ProductDetailModal from './ProductDetailModal.vue';
 import ProudctDeleteModal from './ProductDeleteModal.vue';
 import Swal from 'sweetalert2';
 
-import { setDefaultAuth, getProductApi, checkLoginApi, logoutApi } from '../api';
+import { setDefaultAuth, getProductApi, checkLoginApi, logoutApi, addProductApi } from '../api';
 
 export default {
   components: {
@@ -138,7 +138,7 @@ export default {
           console.log(err);
         });
     },
-    addProduct() {
+    openNewProductModel() {
       this.$refs.newProductModal.showModal();
     },
     editProduct(id) {
@@ -149,6 +149,42 @@ export default {
     },
     watchDetail(id) {
       this.$refs[`productDetailModal-${id}`][0].showModal();
+    },
+    addProduct(product) {
+      addProductApi(product)
+        .then((res) => {
+          const {
+            data: { message = ' ' }
+          } = res;
+          Swal.fire({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 1500,
+            timerProgressBar: true,
+            icon: 'success',
+            title: message
+          });
+          this.$refs.newProductModal.hideModal();
+          this.getProduct();
+        })
+        .catch((err) => {
+          const {
+            response: {
+              data: { message = [] }
+            }
+          } = err;
+          Swal.fire({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 1500,
+            timerProgressBar: true,
+            icon: 'error',
+            title: '新增失敗',
+            text: message
+          });
+        });
     }
   },
   mounted() {

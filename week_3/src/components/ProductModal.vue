@@ -27,34 +27,68 @@
               <div class="mb-2">
                 <div class="mb-3">
                   <label for="imageUrl" class="form-label">輸入圖片網址</label>
-                  <input type="text" class="form-control" placeholder="請輸入圖片連結" />
+                  <input
+                    type="text"
+                    class="form-control"
+                    placeholder="請輸入圖片連結"
+                    v-model.lazy="tempImage"
+                  />
                 </div>
-                <img class="img-fluid" src="" alt="" />
+                <img v-if="tempImage" class="img-fluid" :src="tempImage" :alt="`${title} photo`" />
               </div>
-              <div>
-                <button class="btn btn-outline-primary btn-sm d-block w-100">新增圖片</button>
+              <div class="mb-5">
+                <button
+                  class="btn btn-outline-primary btn-sm d-block w-100"
+                  :disabled="!tempImage"
+                  @click="addImage"
+                >
+                  新增圖片
+                </button>
               </div>
-              <!-- <div v-else> -->
-              <!--   <button class="btn btn-outline-danger btn-sm d-block w-100">刪除圖片</button> -->
-              <!-- </div> -->
+              <div v-for="image in imagesUrl" :key="image" class="my-3">
+                <input
+                  type="text"
+                  class="form-control pe-none mb-2"
+                  placeholder="請輸入圖片連結"
+                  :value="image"
+                />
+                <button class="btn btn-outline-danger btn-sm d-block w-100">刪除圖片</button>
+              </div>
             </div>
             <div class="col-sm-8">
               <div class="mb-3">
                 <label for="title" class="form-label">標題</label>
-                <input id="title" type="text" class="form-control" placeholder="請輸入標題" />
+                <input
+                  id="title"
+                  type="text"
+                  class="form-control"
+                  placeholder="請輸入標題"
+                  v-model="product.title"
+                />
               </div>
 
               <div class="row">
                 <div class="mb-3 col-md-6">
                   <label for="category" class="form-label">分類</label>
-                  <input id="category" type="text" class="form-control" placeholder="請輸入分類" />
+                  <input
+                    id="category"
+                    type="text"
+                    class="form-control"
+                    placeholder="請輸入分類"
+                    v-model="product.category"
+                  />
                 </div>
                 <div class="mb-3 col-md-6">
                   <label for="price" class="form-label">單位</label>
-                  <input id="unit" type="text" class="form-control" placeholder="請輸入單位" />
+                  <input
+                    id="unit"
+                    type="text"
+                    class="form-control"
+                    placeholder="請輸入單位"
+                    v-model="product.unit"
+                  />
                 </div>
               </div>
-
               <div class="row">
                 <div class="mb-3 col-md-6">
                   <label for="origin_price" class="form-label">原價</label>
@@ -64,6 +98,7 @@
                     min="0"
                     class="form-control"
                     placeholder="請輸入原價"
+                    v-model="product.origin_price"
                   />
                 </div>
                 <div class="mb-3 col-md-6">
@@ -74,6 +109,7 @@
                     min="0"
                     class="form-control"
                     placeholder="請輸入售價"
+                    v-model="product.price"
                   />
                 </div>
               </div>
@@ -86,6 +122,7 @@
                   type="text"
                   class="form-control"
                   placeholder="請輸入產品描述"
+                  v-model="product.description"
                 >
                 </textarea>
               </div>
@@ -96,6 +133,7 @@
                   type="text"
                   class="form-control"
                   placeholder="請輸入說明內容"
+                  v-model="product.content"
                 >
                 </textarea>
               </div>
@@ -107,6 +145,7 @@
                     type="checkbox"
                     :true-value="1"
                     :false-value="0"
+                    v-model="product.is_enabled"
                   />
                   <label class="form-check-label" for="is_enabled">是否啟用</label>
                 </div>
@@ -118,7 +157,7 @@
           <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
             取消
           </button>
-          <button type="button" class="btn btn-primary">確認</button>
+          <button type="button" class="btn btn-primary" @click="confirmHandler">確認</button>
         </div>
       </div>
     </div>
@@ -130,6 +169,10 @@ import { Modal } from 'bootstrap';
 
 export default {
   props: {
+    editMode: {
+      type: Boolean,
+      default: false
+    },
     title: {
       type: String,
       default: ''
@@ -169,16 +212,50 @@ export default {
     num: {
       type: Number,
       default: 0
+    },
+    is_enabled: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
     return {
-      modal: {}
+      modal: {},
+      product: {},
+      tempImage: ''
     };
   },
   methods: {
+    initProduct() {
+      this.product.title = this.title;
+      this.product.imageUrl = this.imageUrl;
+      this.product.imagesUrl = this.imagesUrl;
+      this.product.description = this.description;
+      this.product.category = this.category;
+      this.product.content = this.content;
+      this.product.origin_price = this.origin_price;
+      this.product.price = this.price;
+      this.product.unit = this.unit;
+      this.product.num = this.num;
+      this.product.is_enabled = this.is_enabled;
+    },
+    addImage() {
+      this.product.imagesUrl.push(this.tempImage);
+      this.tempImage = '';
+    },
+    confirmHandler() {
+      const { imagesUrl } = this.product;
+      const [imageUrl] = imagesUrl;
+      this.product.imageUrl = imageUrl;
+      this.$emit('add', {
+        data: {
+          ...this.product
+        }
+      });
+    },
     showModal() {
       this.modal.show();
+      this.initProduct();
     },
     hideModal() {
       this.modal.hide();
