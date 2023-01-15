@@ -45,12 +45,12 @@
                   新增圖片
                 </button>
               </div>
-              <div v-for="(image, index) in imagesUrl" :key="image" class="my-3">
+              <div v-for="(image, index) in product.imagesUrl" :key="image" class="my-3">
                 <input
                   type="text"
                   class="form-control mb-2"
                   placeholder="請輸入圖片連結"
-                  :value="imagesUrl[index]"
+                  :value="product.imagesUrl[index]"
                 />
                 <button
                   class="btn btn-outline-danger btn-sm d-block w-100"
@@ -240,7 +240,7 @@ export default {
       this.product.id = this.id;
       this.product.title = this.title;
       this.product.imageUrl = this.imageUrl;
-      this.product.imagesUrl = this.imagesUrl;
+      this.product.imagesUrl = [...this.imagesUrl];
       this.product.description = this.description;
       this.product.category = this.category;
       this.product.content = this.content;
