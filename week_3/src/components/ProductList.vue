@@ -6,7 +6,7 @@
         <div class="text-end mt-4">
           <button class="btn btn-primary" @click="openAddModel">建立新的產品</button>
         </div>
-        <table class="table table-hover mt-4 align-middle text-center">
+        <table class="table table-hover mt-4 align-middle">
           <thead>
             <tr>
               <th scope="col">#</th>
