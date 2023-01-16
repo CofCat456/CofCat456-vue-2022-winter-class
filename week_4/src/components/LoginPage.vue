@@ -7,7 +7,7 @@ import * as yup from 'yup';
 
 import Swal from 'sweetalert2';
 
-import { loginApi } from '../api';
+import { loginApi } from '@/utlis/api.js';
 
 const router = useRouter();
 const loadingStatus = ref(false);

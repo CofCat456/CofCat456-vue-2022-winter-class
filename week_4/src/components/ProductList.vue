@@ -100,7 +100,7 @@ import {
   addProductApi,
   editProductApi,
   deleteProductApi
-} from '../api';
+} from '@/utlis/api';
 
 export default {
   components: {
