@@ -59,7 +59,7 @@ export default {
     deleteHandler() {
       if (this.id.length === 0) return;
       this.$emit('delete', this.id);
-      this.hideModal();
+      this.hide();
     }
   }
 };

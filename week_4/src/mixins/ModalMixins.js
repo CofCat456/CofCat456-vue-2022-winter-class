@@ -2,10 +2,10 @@ import { Modal } from 'bootstrap';
 
 export default {
   methods: {
-    showModal() {
+    show() {
       this.modal.show();
     },
-    hideModal() {
+    hide() {
       this.modal.hide();
     }
   },

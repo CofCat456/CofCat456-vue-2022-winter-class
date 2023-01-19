@@ -90,7 +90,7 @@
                     type="text"
                     class="form-control"
                     placeholder="請輸入單位"
-                    v-model="product.unit"
+                    v-model.number="product.unit"
                   />
                 </div>
               </div>
@@ -103,7 +103,7 @@
                     min="0"
                     class="form-control"
                     placeholder="請輸入原價"
-                    v-model="product.origin_price"
+                    v-model.number="product.origin_price"
                   />
                 </div>
                 <div class="mb-3 col-md-6">
@@ -265,7 +265,7 @@ export default {
         data: this.product
       });
     },
-    showModal() {
+    show() {
       this.modal.show();
       this.initProduct();
     }
