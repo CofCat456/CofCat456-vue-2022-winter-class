@@ -12,7 +12,7 @@
       <div class="modal-content border-0">
         <div class="modal-header bg-dark text-white">
           <h5 id="productModalLabel" class="modal-title">
-            <span>新增產品</span>
+            <span>{{ getTitle }}</span>
           </h5>
           <button
             type="button"
@@ -234,6 +234,11 @@ export default {
       product: {},
       tempImage: ''
     };
+  },
+  computed: {
+    getTitle() {
+      return this.editMode ? '編輯產品' : '新增產品';
+    }
   },
   methods: {
     initProduct() {

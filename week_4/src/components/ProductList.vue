@@ -24,7 +24,9 @@
               <td>{{ index + 1 }}</td>
               <td>{{ product.title }}</td>
               <td>
-                <span class="badge rounded-pill bg-info text-dark">{{ product.category }}</span>
+                <span class="badge rounded-pill px-2 bg-info text-dark">{{
+                  product.category
+                }}</span>
               </td>
               <td>
                 {{ getOriginPrice(product.origin_price) }}
@@ -71,6 +73,7 @@
             </tr>
           </tbody>
         </table>
+        <Pagination v-bind="pagination" @emit-pages="getProduct" />
         <p>
           目前有 <span class="text-info">{{ products.length }}</span> 項產品
         </p>
@@ -92,6 +95,7 @@
 import ProductModal from './ProductModal.vue';
 import ProductDetailModal from './ProductDetailModal.vue';
 import ProudctDeleteModal from './ProductDeleteModal.vue';
+import Pagination from './PaginationBasic.vue';
 import Swal from 'sweetalert2';
 import { currency } from '@/utlis/global.js';
 
@@ -109,13 +113,14 @@ export default {
   components: {
     ProductModal,
     ProductDetailModal,
-    ProudctDeleteModal
+    ProudctDeleteModal,
+    Pagination
   },
   data() {
     return {
       products: [],
       tempProduct: {},
-      editMode: false
+      pagination: {}
     };
   },
   methods: {
@@ -160,11 +165,11 @@ export default {
     getPrice(price) {
       return currency(price, '$ ');
     },
-    getProduct() {
-      getProductApi()
+    getProduct(page = 1) {
+      getProductApi(page)
         .then((res) => {
           const {
-            data: { products }
+            data: { products, pagination }
           } = res;
 
           if (products === null) {
@@ -173,6 +178,7 @@ export default {
           }
 
           this.products = Object.values(products);
+          this.pagination = pagination;
         })
         .catch((err) => {
           console.log(err);
@@ -183,7 +189,6 @@ export default {
         this.$refs.productModal.show();
       } else if (type === 'edit') {
         const { id } = product;
-        console.log(id);
         this.$refs[`productModal-${id}`][0].show();
       } else if (type === 'delete') {
         this.tempProduct = { ...product };
