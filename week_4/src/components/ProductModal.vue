@@ -28,6 +28,7 @@
                 <div class="mb-3">
                   <label for="imageUrl" class="form-label">輸入圖片網址</label>
                   <input
+                    id="imageUrl"
                     type="text"
                     class="form-control"
                     placeholder="請輸入圖片連結"
@@ -36,7 +37,7 @@
                 </div>
                 <img v-if="tempImage" class="img-fluid" :src="tempImage" :alt="`${title} photo`" />
               </div>
-              <div class="mb-5">
+              <div class="mb-3">
                 <button
                   class="btn btn-outline-primary btn-sm d-block w-100"
                   :disabled="!tempImage"
@@ -44,6 +45,10 @@
                 >
                   新增圖片
                 </button>
+              </div>
+              <div class="mb-5">
+                <label for="formFile" class="form-label">或上傳圖片</label>
+                <input class="form-control" type="file" id="formFile" @change="fileHandle" />
               </div>
               <div v-for="(image, index) in product.imagesUrl" :key="image" class="my-3">
                 <input
@@ -119,6 +124,18 @@
                 </div>
               </div>
               <hr />
+              <div class="mb-3">
+                <label for="evaluate" class="form-label">商品評價星級</label>
+                <input
+                  id="evaluate"
+                  type="range"
+                  class="form-range"
+                  min="1"
+                  max="5"
+                  step="1"
+                  v-model="product.evaluate"
+                />
+              </div>
 
               <div class="mb-3">
                 <label for="description" class="form-label">產品描述</label>
@@ -145,14 +162,14 @@
               <div class="mb-3">
                 <div class="form-check">
                   <input
-                    id="is_enabled"
+                    id="isEnabled"
                     class="form-check-input"
                     type="checkbox"
                     :true-value="1"
                     :false-value="0"
                     v-model="product.is_enabled"
                   />
-                  <label class="form-check-label" for="is_enabled">是否啟用</label>
+                  <label class="form-check-label" for="isEnabled">是否啟用</label>
                 </div>
               </div>
             </div>
@@ -171,6 +188,8 @@
 
 <script>
 import ModalMixin from '@/mixins/ModalMixins';
+
+import { uploadFileApi } from '@/utlis/api';
 
 export default {
   props: {
@@ -222,6 +241,10 @@ export default {
       type: Number,
       default: 0
     },
+    evaluate: {
+      type: Number,
+      default: 1
+    },
     is_enabled: {
       type: Number,
       default: 0
@@ -253,7 +276,28 @@ export default {
       this.product.price = this.price;
       this.product.unit = this.unit;
       this.product.num = this.num;
+      this.product.evaluate = this.evaluate;
       this.product.is_enabled = this.is_enabled;
+    },
+    fileHandle(element) {
+      const file = element.target.files[0];
+      const formData = new FormData();
+      formData.append('file-to-upload', file);
+      this.uploadFile(formData);
+    },
+    uploadFile(formData) {
+      uploadFileApi(formData)
+        .then((res) => {
+          console.log(res);
+          const {
+            data: { imageUrl }
+          } = res;
+
+          this.product.imagesUrl.push(imageUrl);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     },
     addImage() {
       this.product.imagesUrl.push(this.tempImage);
@@ -266,6 +310,7 @@ export default {
       const { imagesUrl } = this.product;
       const [imageUrl] = imagesUrl;
       this.product.imageUrl = imageUrl;
+      console.log(this.product);
       this.$emit(`${this.editMode ? 'edit' : 'add'}`, {
         data: this.product
       });

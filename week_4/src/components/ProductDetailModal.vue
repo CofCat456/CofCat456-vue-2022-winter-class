@@ -20,6 +20,7 @@
             <div class="col-md-9 d-flex flex-column p-3 fs-5">
               <p><span class="fw-bold">商品描述</span> : {{ description }}</p>
               <p><span class="fw-bold">商品內容</span> : {{ content }}</p>
+              <p><span class="fw-bold">商品星級</span> : {{ evaluate }}</p>
               <div class="d-flex justify-content-between mt-auto">
                 <div class="d-flex gap-3">
                   <p class="mb-0 text-decoration-line-through">{{ getOriginPrice }}</p>
@@ -87,6 +88,10 @@ export default {
     price: {
       type: Number,
       default: 0
+    },
+    evaluate: {
+      type: Number,
+      default: 1
     },
     unit: {
       type: String,
