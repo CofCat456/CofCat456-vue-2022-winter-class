@@ -18,9 +18,16 @@
               <img :src="getImageUrl" class="img-fluid" :alt="`${title} photo`" />
             </div>
             <div class="col-md-9 d-flex flex-column p-3 fs-5">
-              <p><span class="fw-bold">商品描述</span> : {{ description }}</p>
-              <p><span class="fw-bold">商品內容</span> : {{ content }}</p>
-              <p><span class="fw-bold">商品星級</span> : {{ evaluate }}</p>
+              <p><span class="fw-bold">商品描述 : </span>{{ description }}</p>
+              <p><span class="fw-bold">商品內容 : </span>{{ content }}</p>
+              <div>
+                <span class="fw-bold">商品星級 : </span>
+                <div class="d-inline-flex align-items-center gap-1 text-info">
+                  <i v-for="num in Math.floor(evaluate)" :key="num" class="bi bi-star-fill"></i>
+                  <i v-if="evaluate % 1" class="bi bi-star-half"></i>
+                  <i v-for="num in 5 - Math.ceil(evaluate)" :key="num" class="bi bi-star"></i>
+                </div>
+              </div>
               <div class="d-flex justify-content-between mt-auto">
                 <div class="d-flex gap-3">
                   <p class="mb-0 text-decoration-line-through">{{ getOriginPrice }}</p>

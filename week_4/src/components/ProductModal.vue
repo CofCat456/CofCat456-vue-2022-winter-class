@@ -132,8 +132,8 @@
                   class="form-range"
                   min="1"
                   max="5"
-                  step="1"
-                  v-model="product.evaluate"
+                  step="0.5"
+                  v-model.number="product.evaluate"
                 />
               </div>
 
@@ -310,7 +310,6 @@ export default {
       const { imagesUrl } = this.product;
       const [imageUrl] = imagesUrl;
       this.product.imageUrl = imageUrl;
-      console.log(this.product);
       this.$emit(`${this.editMode ? 'edit' : 'add'}`, {
         data: this.product
       });
