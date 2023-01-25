@@ -2,7 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router';
 import Login from '../components/Login.vue';
 import ProductList from '../components/ProductList.vue';
 
-const history = createWebHistory();
+const history = createWebHistory('/vue-2022-winter-class/week_2');
 const routes = [
   {
     path: '/',
@@ -16,4 +16,4 @@ const routes = [
   }
 ];
 
-export default createRouter({ history, routes, base: '/vue-2022-winter-class/week_2/' });
+export default createRouter({ history, routes });
