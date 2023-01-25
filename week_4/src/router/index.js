@@ -5,15 +5,15 @@ import ProductList from '../components/ProductList.vue';
 const history = createWebHistory();
 const routes = [
   {
-    path: '/vue-2022-winter-class/week_4/',
+    path: '/',
     name: 'Login',
     component: LoginPage
   },
   {
-    path: '/vue-2022-winter-class/week_4/productList',
+    path: '/productList',
     name: 'ProductList',
     component: ProductList
   }
 ];
 
-export default createRouter({ history, routes });
+export default createRouter({ history, routes, base: '/vue-2022-winter-class/week_4/' });
