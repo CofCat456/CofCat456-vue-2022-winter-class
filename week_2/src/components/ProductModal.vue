@@ -52,82 +52,82 @@
 </template>
 
 <script>
-  import { Modal } from 'bootstrap';
+import { Modal } from 'bootstrap';
 
-  export default {
-    props: {
-      title: {
-        type: String,
-        default: '',
-      },
-      imageUrl: {
-        type: String,
-        default: '',
-      },
-      imagesUrl: {
-        type: Array,
-        default: () => [],
-      },
-      description: {
-        type: String,
-        default: '',
-      },
-      category: {
-        type: String,
-        default: '',
-      },
-      content: {
-        type: String,
-        default: '',
-      },
-      origin_price: {
-        type: Number,
-        default: 0,
-      },
-      price: {
-        type: Number,
-        default: 0,
-      },
-      unit: {
-        type: String,
-        default: '',
-      },
-      num: {
-        type: Number,
-        default: 0,
-      },
+export default {
+  props: {
+    title: {
+      type: String,
+      default: ''
     },
-    data() {
-      return {
-        modal: {},
-        curImage: '',
-      };
+    imageUrl: {
+      type: String,
+      default: ''
     },
-    computed: {
-      getImageUrl() {
-        return this.curImage === '' ? this.imageUrl : this.curImage;
-      }
+    imagesUrl: {
+      type: Array,
+      default: () => []
     },
-    watch: {
-      imageUrl() {
-        this.curImage = this.imageUrl;
-      },
+    description: {
+      type: String,
+      default: ''
     },
-    methods: {
-      showModal() {
-        this.modal.show();
-      },
-      hideModal() {
-        this.modal.hide();
-      },
-      changeImage(image) {
-        this.curImage = image;
-      },
+    category: {
+      type: String,
+      default: ''
     },
-    mounted() {
-      this.modal = new Modal(this.$refs.modal);
+    content: {
+      type: String,
+      default: ''
     },
-  };
+    origin_price: {
+      type: Number,
+      default: 0
+    },
+    price: {
+      type: Number,
+      default: 0
+    },
+    unit: {
+      type: String,
+      default: ''
+    },
+    num: {
+      type: Number,
+      default: 0
+    }
+  },
+  data() {
+    return {
+      modal: {},
+      curImage: ''
+    };
+  },
+  computed: {
+    getImageUrl() {
+      return this.curImage === '' ? this.imageUrl : this.curImage;
+    }
+  },
+  watch: {
+    imageUrl() {
+      this.curImage = this.imageUrl;
+    }
+  },
+  methods: {
+    showModal() {
+      this.modal.show();
+    },
+    hideModal() {
+      this.modal.hide();
+    },
+    changeImage(image) {
+      this.curImage = image;
+    }
+  },
+  mounted() {
+    this.modal = new Modal(this.$refs.modal);
+  }
+};
 </script>
 
 <style></style>
