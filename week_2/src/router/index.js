@@ -5,7 +5,7 @@ import ProductList from '../components/ProductList.vue';
 const history = createWebHistory();
 const routes = [
   {
-    path: '/week_2',
+    path: '/',
     name: 'Login',
     component: Login
   },
