@@ -5,7 +5,7 @@ import { fileURLToPath, URL } from 'node:url';
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  base: '/vue-2022-winter-class/week_4/',
+  base: process.env.NODE_ENV === 'production' ? '/vue-2022-winter-class/week_4/' : '',
   plugins: [vue()],
   resolve: {
     alias: {

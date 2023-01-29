@@ -55,12 +55,12 @@ import { setDefaultAuth, getProductApi, checkLoginApi, logoutApi } from '../api'
 
 export default {
   components: {
-    ProductModal,
+    ProductModal
   },
   data() {
     return {
       products: [],
-      tempProduct: {},
+      tempProduct: {}
     };
   },
   methods: {
@@ -72,7 +72,7 @@ export default {
         timer: 1500,
         timerProgressBar: true,
         icon: 'error',
-        title: 'token 已過期 (′゜ω。‵)',
+        title: 'token 已過期 (′゜ω。‵)'
       });
       this.$router.push({ name: 'Login' });
     },
@@ -94,7 +94,7 @@ export default {
           timer: 1500,
           timerProgressBar: true,
           icon: 'success',
-          title: '登出成功 ฅ●ω●ฅ',
+          title: '登出成功 ฅ●ω●ฅ'
         });
         this.$router.push({ name: 'Login' });
       });
@@ -103,7 +103,7 @@ export default {
       getProductApi()
         .then((res) => {
           const {
-            data: { products },
+            data: { products }
           } = res;
           this.products = Object.values(products);
         })
@@ -114,7 +114,7 @@ export default {
     watchProductDetail(item) {
       this.tempProduct = item;
       this.$refs.productModal.showModal();
-    },
+    }
   },
   mounted() {
     const token = document.cookie.replace(/(?:(?:^|.*;\s*)token\s*\=\s*([^;]*).*$)|^.*$/, '$1');
@@ -126,7 +126,7 @@ export default {
 
     setDefaultAuth(token);
     this.checkLogin();
-  },
+  }
 };
 </script>
 

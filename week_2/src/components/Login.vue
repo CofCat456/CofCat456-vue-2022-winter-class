@@ -12,24 +12,24 @@ const router = useRouter();
 
 const schema = yup.object().shape({
   account: yup.string().email('請輸入正確的 Email 格式 ㅍ_ㅍ!!').required('請輸入 Email !!'),
-  password: yup.string('').min(6, '密碼長度不得小於 6').required('請輸入密碼!!'),
+  password: yup.string('').min(6, '密碼長度不得小於 6').required('請輸入密碼!!')
 });
 
 const { errors, register, handleSubmit, handleReset } = useForm({
   initialValues: {
     account: '',
-    password: '',
+    password: ''
   },
   validate: yupResolver(schema),
   onSubmit(values) {
     const { account, password } = values;
     loginApi({
       username: account,
-      password,
+      password
     })
       .then((res) => {
         const {
-          data: { success, token, expired },
+          data: { success, token, expired }
         } = res;
         if (success) {
           Swal.fire({
@@ -39,15 +39,15 @@ const { errors, register, handleSubmit, handleReset } = useForm({
             timer: 1500,
             timerProgressBar: true,
             icon: 'success',
-            title: '登入成功 (*‘ v`*)',
+            title: '登入成功 (*‘ v`*)'
           });
           document.cookie = `token=${token};expires=${new Date(expired)};`;
-          router.push('/vue-2022-winter-class/week_2/productList');
+          router.push({ name: 'ProductList' });
         }
       })
       .catch((err) => {
         const {
-          response: { message },
+          response: { message }
         } = err;
         Swal.fire({
           toast: true,
@@ -57,10 +57,10 @@ const { errors, register, handleSubmit, handleReset } = useForm({
           timerProgressBar: true,
           icon: 'error',
           title: '登入失敗',
-          text: message,
+          text: message
         });
       });
-  },
+  }
 });
 
 const { value: account, attrs: accountFieldAttrs } = register('account');
