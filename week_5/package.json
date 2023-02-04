@@ -1,0 +1,37 @@
+{
+  "name": "-",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@popperjs/core": "^2.11.6",
+    "@vorms/core": "^1.0.0",
+    "@vorms/resolvers": "^1.0.0",
+    "axios": "^1.2.2",
+    "eslint-plugin-n": "^15.6.1",
+    "eslint-plugin-prettier": "^4.2.1",
+    "sweetalert2": "^11.7.0",
+    "vue": "^3.2.45",
+    "vue-router": "^4.1.6",
+    "yup": "^0.32.11"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^4.0.0",
+    "@vue/eslint-config-prettier": "^7.0.0",
+    "bootstrap": "^5.2.3",
+    "bootstrap-icons": "^1.10.3",
+    "eslint": "^8.31.0",
+    "eslint-config-standard": "^17.0.0",
+    "eslint-import-resolver-alias": "^1.1.2",
+    "eslint-plugin-import": "^2.27.4",
+    "eslint-plugin-vue": "^9.9.0",
+    "prettier": "^2.8.3",
+    "sass": "^1.57.1",
+    "vite": "^4.0.0"
+  }
+}
