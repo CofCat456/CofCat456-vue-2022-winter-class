@@ -1,7 +1,7 @@
 <template>
-  <div class="container-fruid">
+  <div class="container">
     <div class="row justify-content-center py-5">
-      <div class="col-md-8">
+      <div class="col">
         <h2>產品列表</h2>
         <div class="text-end mt-4">
           <button class="btn btn-primary" @click="openModal()">建立新的產品</button>
