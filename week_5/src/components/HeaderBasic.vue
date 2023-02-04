@@ -1,7 +1,7 @@
 <template>
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container">
-      <a class="navbar-brand" href="#">Vue 直播班 第五週主線任務</a>
+      <p class="navbar-brand m-0">Vue 直播班 第五週主線任務</p>
       <button
         class="navbar-toggler"
         type="button"
