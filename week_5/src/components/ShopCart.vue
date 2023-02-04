@@ -3,7 +3,7 @@
     <div class="row justify-content-center py-5">
       <div class="col">
         <h2>購物車</h2>
-        <table class="table align-middle">
+        <table class="table align-middle mt-4 table-hover">
           <thead>
             <tr>
               <th></th>
@@ -20,12 +20,7 @@
                     type="button"
                     class="btn btn-outline-danger btn-sm"
                     @click="removeCartItem(item.id)"
-                    :disabled="loadingStatus.loadingItem === item.id"
                   >
-                    <i
-                      class="fas fa-spinner fa-pulse"
-                      v-if="loadingStatus.loadingItem === item.id"
-                    ></i>
                     x
                   </button>
                 </td>
@@ -35,11 +30,10 @@
                 </td>
                 <td>
                   <div class="input-group input-group-sm">
-                    <div class="input-group mb-3">
+                    <div class="input-group">
                       <input
                         v-model.number="item.qty"
                         @blur="updateCart(item)"
-                        :disabled="loadingStatus.loadingItem === item.id"
                         min="1"
                         type="number"
                         class="form-control"
@@ -79,7 +73,13 @@ import Loading from './Loading.vue';
 import Swal from 'sweetalert2';
 
 import { currency } from '@/utlis/global.js';
-import { setDefaultAuth, checkLoginApi, getShopCartApi } from '@/utlis/api';
+import {
+  setDefaultAuth,
+  checkLoginApi,
+  getShopCartApi,
+  removeShopCartApi,
+  removeAllShopCartApi
+} from '@/utlis/api';
 
 export default {
   components: {
@@ -120,7 +120,9 @@ export default {
       getShopCartApi()
         .then((res) => {
           const {
-            data: { carts, total, final_total: finalTotal }
+            data: {
+              data: { carts, total, final_total: finalTotal }
+            }
           } = res;
           this.carts = carts;
           this.total = total;
@@ -130,6 +132,41 @@ export default {
         .catch((err) => {
           console.log(err);
           this.$refs.loading.hide();
+        });
+    },
+    removeCartItem(id) {
+      this.$refs.loading.show();
+      removeShopCartApi(id)
+        .then(() => {
+          this.$refs.loading.hide();
+          Swal.fire({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 1500,
+            timerProgressBar: true,
+            icon: 'success',
+            title: '移除成功(･8･)！'
+          });
+          this.getShopCart();
+        })
+        .catch((err) => {
+          const {
+            response: {
+              data: { message }
+            }
+          } = err;
+          this.$refs.loading.hide();
+          Swal.fire({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 1500,
+            timerProgressBar: true,
+            icon: 'error',
+            title: '移除失敗',
+            text: message
+          });
         });
     }
   },

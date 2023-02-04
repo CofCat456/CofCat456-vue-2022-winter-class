@@ -51,6 +51,7 @@
           </div>
         </div>
         <div class="modal-footer">
+          <button type="button" class="btn btn-primary" @click="emitAddShopCart">加入購物車</button>
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">關閉</button>
         </div>
       </div>
@@ -64,6 +65,10 @@ import { currency } from '@/utlis/global.js';
 
 export default {
   props: {
+    id: {
+      type: String,
+      default: ''
+    },
     title: {
       type: String,
       default: ''
@@ -126,6 +131,14 @@ export default {
   methods: {
     changeImage(image) {
       this.curImage = image;
+    },
+    emitAddShopCart() {
+      this.$emit('add-shopCart', {
+        data: {
+          product_id: this.id,
+          qty: 1
+        }
+      });
     }
   }
 };

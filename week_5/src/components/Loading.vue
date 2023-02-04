@@ -5,7 +5,7 @@
     :width="128"
     :height="128"
     color="#38bdf8"
-    :can-cancel="true"
+    :can-cancel="false"
     :is-full-page="fullPage"
   />
 </template>

@@ -79,7 +79,7 @@
         </p>
       </div>
     </div>
-    <ProductDetailModal ref="productDetailModal" v-bind="tempProduct" />
+    <ProductDetailModal ref="productDetailModal" v-bind="tempProduct" @add-shopCart="addShopCart" />
     <ProudctDeleteModal
       ref="productDeleteModal"
       :id="tempProduct.id"
@@ -106,7 +106,8 @@ import {
   checkLoginApi,
   addProductApi,
   editProductApi,
-  deleteProductApi
+  deleteProductApi,
+  addShopCartApi
 } from '@/utlis/api';
 
 export default {
@@ -309,6 +310,40 @@ export default {
             timerProgressBar: true,
             icon: 'error',
             title: '刪除失敗',
+            text: message
+          });
+        });
+    },
+    addShopCart(data) {
+      this.$refs.loading.show();
+      addShopCartApi(data)
+        .then(() => {
+          this.$refs.loading.hide();
+          Swal.fire({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 1500,
+            timerProgressBar: true,
+            icon: 'success',
+            title: '增加購物車成功(๑•́ ₃ •̀๑)!'
+          });
+        })
+        .catch((err) => {
+          const {
+            response: {
+              data: { message }
+            }
+          } = err;
+          this.$refs.loading.hide();
+          Swal.fire({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 1500,
+            timerProgressBar: true,
+            icon: 'error',
+            title: '增加購物車失敗',
             text: message
           });
         });
