@@ -89,6 +89,7 @@
     />
   </div>
   <ProductModal ref="productModal" @add="addProduct" />
+  <Loading ref="loading" />
 </template>
 
 <script>
@@ -96,9 +97,10 @@ import ProductModal from './ProductModal.vue';
 import ProductDetailModal from './ProductDetailModal.vue';
 import ProudctDeleteModal from './ProductDeleteModal.vue';
 import Pagination from './PaginationBasic.vue';
+import Loading from './Loading.vue';
 import Swal from 'sweetalert2';
-import { currency } from '@/utlis/global.js';
 
+import { currency } from '@/utlis/global.js';
 import {
   setDefaultAuth,
   getProductApi,
@@ -114,7 +116,8 @@ export default {
     ProductModal,
     ProductDetailModal,
     ProudctDeleteModal,
-    Pagination
+    Pagination,
+    Loading
   },
   data() {
     return {
@@ -137,12 +140,14 @@ export default {
       this.$router.push({ name: 'Login' });
     },
     checkLogin() {
+      this.$refs.loading.show();
       checkLoginApi()
         .then(() => {
           this.getProduct();
         })
         .catch(() => {
           this.$router.push({ name: 'Login' });
+          this.$refs.loading.hide();
         });
     },
     logout() {
@@ -179,9 +184,12 @@ export default {
 
           this.products = Object.values(products);
           this.pagination = pagination;
+
+          this.$refs.loading.hide();
         })
         .catch((err) => {
           console.log(err);
+          this.$refs.loading.hide();
         });
     },
     openModal(type = 'new', product) {
@@ -199,11 +207,15 @@ export default {
       }
     },
     addProduct(product) {
+      this.$refs.loading.show();
       addProductApi(product)
         .then((res) => {
           const {
             data: { message = ' ' }
           } = res;
+          this.$refs.productModal.hide();
+          this.$refs.loading.hide();
+
           Swal.fire({
             toast: true,
             position: 'top-end',
@@ -213,7 +225,7 @@ export default {
             icon: 'success',
             title: message
           });
-          this.$refs.productModal.hide();
+
           this.getProduct();
         })
         .catch((err) => {
@@ -222,6 +234,8 @@ export default {
               data: { message = [] }
             }
           } = err;
+          this.$refs.loading.hide();
+
           Swal.fire({
             toast: true,
             position: 'top-end',
@@ -235,6 +249,7 @@ export default {
         });
     },
     editProduct(product) {
+      this.$refs.loading.show();
       const {
         data: { id }
       } = product;
@@ -243,6 +258,9 @@ export default {
           const {
             data: { message = ' ' }
           } = res;
+          this.$refs[`productModal-${id}`][0].hide();
+          this.$refs.loading.hide();
+
           Swal.fire({
             toast: true,
             position: 'top-end',
@@ -252,7 +270,7 @@ export default {
             icon: 'success',
             title: message
           });
-          this.$refs[`productModal-${id}`][0].hide();
+
           this.getProduct();
         })
         .catch((err) => {
@@ -262,6 +280,8 @@ export default {
               data: { message }
             }
           } = err;
+          this.$refs.loading.hide();
+
           Swal.fire({
             toast: true,
             position: 'top-end',
@@ -275,8 +295,10 @@ export default {
         });
     },
     deleteProduct(id) {
+      this.$refs.loading.show();
       deleteProductApi(id)
         .then(() => {
+          this.$refs.loading.hide();
           Swal.fire({
             toast: true,
             position: 'top-end',
@@ -294,6 +316,7 @@ export default {
               data: { message }
             }
           } = err;
+          this.$refs.loading.hide();
           Swal.fire({
             toast: true,
             position: 'top-end',
