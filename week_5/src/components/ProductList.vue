@@ -79,7 +79,6 @@
         </p>
       </div>
     </div>
-    <button type="button" class="btn btn-outline-secondary logoutBtn" @click="logout">登出</button>
     <ProductDetailModal ref="productDetailModal" v-bind="tempProduct" />
     <ProudctDeleteModal
       ref="productDeleteModal"
@@ -105,7 +104,6 @@ import {
   setDefaultAuth,
   getProductApi,
   checkLoginApi,
-  logoutApi,
   addProductApi,
   editProductApi,
   deleteProductApi
@@ -149,20 +147,6 @@ export default {
           this.$router.push({ name: 'Login' });
           this.$refs.loading.hide();
         });
-    },
-    logout() {
-      logoutApi().then(() => {
-        Swal.fire({
-          toast: true,
-          position: 'top-end',
-          showConfirmButton: false,
-          timer: 1500,
-          timerProgressBar: true,
-          icon: 'success',
-          title: '登出成功 ฅ●ω●ฅ'
-        });
-        this.$router.push({ name: 'Login' });
-      });
     },
     getOriginPrice(originPrice) {
       return currency(originPrice, '$ ');
@@ -343,11 +327,3 @@ export default {
   }
 };
 </script>
-
-<style>
-.logoutBtn {
-  position: absolute;
-  right: 20px;
-  bottom: 20px;
-}
-</style>
