@@ -1,8 +1,9 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import LoginPage from '@/views/LoginPage.vue';
 import HomePage from '@/views/HomePage.vue';
-import ProductList from '@/components/ProductList.vue';
-import ShopCart from '@/components/ShopCart.vue';
+import Checkout from '@/views/CheckoutPage.vue';
+import ProductListPage from '@/views/ProductListPage.vue';
+import ShopCartPage from '@/views/ShopCartPage.vue';
 
 const path = process.env.NODE_ENV === 'production' ? '/vue-2022-winter-class/week_5/' : '';
 const history = createWebHistory(path);
@@ -20,12 +21,17 @@ const routes = [
       {
         path: 'productList',
         name: 'ProductList',
-        component: ProductList
+        component: ProductListPage
       },
       {
         path: 'shopCart',
         name: 'ShopCart',
-        component: ShopCart
+        component: ShopCartPage
+      },
+      {
+        path: 'checkout',
+        name: 'Checkout',
+        component: Checkout
       }
     ]
   }

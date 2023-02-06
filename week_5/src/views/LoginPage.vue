@@ -77,31 +77,33 @@ const { value: password, attrs: passwordFieldAttrs } = register('password');
   <section class="container position-absolute top-50 start-50 translate-middle text-center">
     <div class="row justify-content-center">
       <h1 class="h3 mb-3 font-weight-normal">請先登入</h1>
-      <div class="col-8">
+      <div class="col-md-3">
         <form class="form-signin" novalidate @submit="handleSubmit" @reset="handleReset">
           <div class="form-floating mb-3">
             <input
               id="username"
               type="email"
               class="form-control"
+              :class="{ 'is-invalid': errors['account'] }"
               placeholder="name@example.com"
               v-bind="accountFieldAttrs"
               v-model="account"
             />
             <label for="username">Email address</label>
-            <div class="feedback">{{ errors.account }}</div>
+            <div class="invalid-feedback">{{ errors.account }}</div>
           </div>
           <div class="form-floating">
             <input
               type="password"
               id="password"
               class="form-control"
+              :class="{ 'is-invalid': errors['password'] }"
               placeholder="Password"
               v-bind="passwordFieldAttrs"
               v-model="password"
             />
             <label for="password">Password</label>
-            <div class="feedback">{{ errors.password }}</div>
+            <div class="invalid-feedback">{{ errors.password }}</div>
           </div>
           <button
             v-if="loadingStatus"
@@ -119,25 +121,3 @@ const { value: password, attrs: passwordFieldAttrs } = register('password');
     <p class="mt-5 mb-3 text-muted">&copy; 2021~∞ - 六角學院</p>
   </section>
 </template>
-
-<style scoped>
-.form-signin {
-  width: 100%;
-  max-width: 330px;
-  padding: 15px;
-  margin: auto;
-}
-.form-signin {
-  width: 100%;
-  max-width: 330px;
-  padding: 15px;
-  margin: auto;
-}
-
-.feedback {
-  width: 100%;
-  margin-top: 0.25rem;
-  font-size: 0.875em;
-  color: #dc3545;
-}
-</style>

@@ -32,35 +32,12 @@
             >
           </li>
           <li class="nav-item ms-3">
-            <button type="button" class="btn btn-outline-secondary" @click="logout">登出</button>
+            <button type="button" class="btn btn-outline-secondary" @click="$emit('logout')">
+              登出
+            </button>
           </li>
         </ul>
       </div>
     </div>
   </nav>
 </template>
-
-<script>
-import Swal from 'sweetalert2';
-
-import { logoutApi } from '@/utlis/api';
-
-export default {
-  methods: {
-    logout() {
-      logoutApi().then(() => {
-        Swal.fire({
-          toast: true,
-          position: 'top-end',
-          showConfirmButton: false,
-          timer: 1500,
-          timerProgressBar: true,
-          icon: 'success',
-          title: '登出成功 ฅ●ω●ฅ'
-        });
-        this.$router.push({ name: 'Login' });
-      });
-    }
-  }
-};
-</script>

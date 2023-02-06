@@ -29,7 +29,7 @@
                 }}</span>
               </td>
               <td>
-                {{ getOriginPrice(product.origin_price) }}
+                {{ getPrice(product.origin_price) }}
               </td>
               <td>
                 {{ getPrice(product.price) }}
@@ -92,18 +92,16 @@
 </template>
 
 <script>
-import ProductModal from './ProductModal.vue';
-import ProductDetailModal from './ProductDetailModal.vue';
-import ProudctDeleteModal from './ProductDeleteModal.vue';
-import Pagination from './PaginationBasic.vue';
-import Loading from './Loading.vue';
+import ProductModal from '@/components/ProductModal.vue';
+import ProductDetailModal from '@/components/ProductDetailModal.vue';
+import ProudctDeleteModal from '@/components/ProductDeleteModal.vue';
+import Pagination from '@/components/PaginationBasic.vue';
+import Loading from '@/components/Loading.vue';
 import Swal from 'sweetalert2';
 
 import { currency } from '@/utlis/global.js';
 import {
-  setDefaultAuth,
   getProductApi,
-  checkLoginApi,
   addProductApi,
   editProductApi,
   deleteProductApi,
@@ -126,32 +124,6 @@ export default {
     };
   },
   methods: {
-    expiredToken() {
-      Swal.fire({
-        toast: true,
-        position: 'top-end',
-        showConfirmButton: false,
-        timer: 1500,
-        timerProgressBar: true,
-        icon: 'error',
-        title: 'token 已過期 (′゜ω。‵)'
-      });
-      this.$router.push({ name: 'Login' });
-    },
-    checkLogin() {
-      this.$refs.loading.show();
-      checkLoginApi()
-        .then(() => {
-          this.getProduct();
-        })
-        .catch(() => {
-          this.$router.push({ name: 'Login' });
-          this.$refs.loading.hide();
-        });
-    },
-    getOriginPrice(originPrice) {
-      return currency(originPrice, '$ ');
-    },
     getPrice(price) {
       return currency(price, '$ ');
     },
@@ -260,11 +232,13 @@ export default {
         })
         .catch((err) => {
           console.log(err);
+
           const {
             response: {
               data: { message }
             }
           } = err;
+
           this.$refs.loading.hide();
 
           Swal.fire({
@@ -350,15 +324,7 @@ export default {
     }
   },
   mounted() {
-    const token = document.cookie.replace(/(?:(?:^|.*;\s*)token\s*\=\s*([^;]*).*$)|^.*$/, '$1');
-
-    if (!token) {
-      this.expiredToken();
-      return;
-    }
-
-    setDefaultAuth(token);
-    this.checkLogin();
+    this.getProduct();
   }
 };
 </script>
