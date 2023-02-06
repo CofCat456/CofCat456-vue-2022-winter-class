@@ -15,9 +15,15 @@ import Loading from 'vue-loading-overlay';
 import 'vue-loading-overlay/dist/css/index.css';
 
 export default {
+  props: {
+    loadingStatus: {
+      type: Boolean,
+      default: false
+    }
+  },
   data() {
     return {
-      isLoading: false,
+      isLoading: this.loadingStatus,
       fullPage: true
     };
   },
