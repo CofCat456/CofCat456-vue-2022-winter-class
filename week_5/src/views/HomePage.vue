@@ -1,7 +1,7 @@
 <template>
   <HeaderBasic @logout="logout" />
-  <RouterView v-if="isLogin" />
-  <Loading v-else ref="loading" :loading-status="true" />
+  <RouterView />
+  <Loading ref="loading" />
 </template>
 
 <script>
@@ -17,11 +17,6 @@ export default {
     HeaderBasic,
     Loading
   },
-  data() {
-    return {
-      isLogin: false
-    };
-  },
   methods: {
     expiredToken() {
       Swal.fire({
@@ -36,11 +31,14 @@ export default {
       this.$router.push({ name: 'Login' });
     },
     checkLogin() {
+      this.$refs.loading.show();
       checkLoginApi()
         .then(() => {
-          this.isLogin = true;
+          this.$refs.loading.hide();
+          this.$router.push({ name: 'ProductList' });
         })
         .catch(() => {
+          this.$refs.loading.hide();
           this.$router.push({ name: 'Login' });
         });
     },

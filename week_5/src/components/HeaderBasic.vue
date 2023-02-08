@@ -31,6 +31,14 @@
               >購物車</RouterLink
             >
           </li>
+          <li class="nav-item">
+            <RouterLink
+              class="nav-link"
+              :class="{ active: $route.name === 'Order' }"
+              :to="{ name: 'Order' }"
+              >訂單
+            </RouterLink>
+          </li>
           <li class="nav-item ms-3">
             <button type="button" class="btn btn-outline-secondary" @click="$emit('logout')">
               登出

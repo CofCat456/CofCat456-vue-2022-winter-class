@@ -25,4 +25,5 @@ export const addShopCartApi = (data) => axios.post(shopCartUrl, data);
 export const updateShopCartApi = (id, data) => axios.put(`${shopCartUrl}/${id}`, data);
 export const removeShopCartApi = (id) => axios.delete(`${shopCartUrl}/${id}`);
 export const removeAllShopCartApi = () => axios.delete(`${shopCartUrl}s`);
+export const getOrdersApi = () => axios.get(`${orderUrl}s`);
 export const checkoutApi = (data) => axios.post(orderUrl, data);

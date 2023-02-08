@@ -46,7 +46,7 @@ const { errors, register, handleSubmit, handleReset } = useForm({
           });
           document.cookie = `token=${token};expires=${new Date(expired)};`;
           loadingStatus.value = false;
-          router.push({ name: 'ProductList' });
+          router.push({ name: 'Home' });
         }
       })
       .catch((err) => {
