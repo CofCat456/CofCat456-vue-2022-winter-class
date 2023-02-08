@@ -79,12 +79,10 @@ export default {
       getOrdersApi()
         .then((res) => {
           this.$refs.loading.hide();
-          console.log(res);
           const {
             data: { orders }
           } = res;
           this.orders = orders;
-          console.log(this.orders);
           this.$refs.loading.hide();
         })
         .catch((err) => {
