@@ -1,1 +1,0 @@
-function c(t,n=""){const e=t.toString().split("."),o=/(\d{1,3})(?=(\d{3})+$)/g;return n+e[0].replace(o,"$1,")+(e.length===2?`.${e[1]}`:"")}const r=/^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/,s=document.cookie.replace(/(?:(?:^|.*;\s*)token\s*=\s*([^;]*).*$)|^.*$/,"$1");export{c,r as p,s as t};
