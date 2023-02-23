@@ -9,8 +9,6 @@ import HeaderBasic from '@/components/HeaderBasic.vue';
 import Loading from '@/components/Loading.vue';
 import Swal from 'sweetalert2';
 
-import axios from 'axios';
-
 import { checkLoginApi, logoutApi } from '@/utlis/api';
 import { token } from '@/utlis/global';
 
@@ -66,7 +64,6 @@ export default {
     },
     checkLogin() {
       this.$refs.loading.show();
-      axios.defaults.headers.common.Authorization = `${token}`;
 
       checkLoginApi()
         .then((res) => {

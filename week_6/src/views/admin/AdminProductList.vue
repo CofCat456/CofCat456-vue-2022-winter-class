@@ -123,7 +123,6 @@ export default {
           const {
             data: { products, pagination }
           } = res;
-          console.log(res);
 
           if (products === null) {
             this.products = [];
