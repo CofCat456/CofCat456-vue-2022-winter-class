@@ -4,7 +4,7 @@
       <div class="col">
         <h2>產品列表</h2>
         <div class="text-end mt-4">
-          <button class="btn btn-primary" @click="openModal()">建立新的產品</button>
+          <button class="btn btn-primary" @click="openModal('new')">建立新的產品</button>
         </div>
         <table class="table table-hover mt-4 align-middle">
           <thead>
@@ -16,7 +16,6 @@
               <th scope="col">售價</th>
               <th scope="col">是否啟用</th>
               <th scope="col">編輯</th>
-              <th scope="col">查看細節</th>
             </tr>
           </thead>
           <tbody>
@@ -59,11 +58,6 @@
                   </button>
                 </div>
               </td>
-              <td>
-                <button type="button" class="btn btn-primary" @click="openModal('detail', product)">
-                  查看細節
-                </button>
-              </td>
               <ProductModal
                 editMode
                 :ref="`productModal-${product.id}`"
@@ -79,7 +73,6 @@
         </p>
       </div>
     </div>
-    <ProductDetailModal ref="productDetailModal" v-bind="tempProduct" @add-shopCart="addShopCart" />
     <ProudctDeleteModal
       ref="productDeleteModal"
       :id="tempProduct.id"
@@ -93,25 +86,22 @@
 
 <script>
 import ProductModal from '@/components/ProductModal.vue';
-import ProductDetailModal from '@/components/ProductDetailModal.vue';
 import ProudctDeleteModal from '@/components/ProductDeleteModal.vue';
 import Pagination from '@/components/PaginationBasic.vue';
 import Loading from '@/components/Loading.vue';
 import Swal from 'sweetalert2';
 
-import { currency } from '@/utlis/global.js';
+import { currency } from '@/utlis/global';
 import {
-  getProductApi,
-  addProductApi,
-  editProductApi,
-  deleteProductApi,
-  addShopCartApi
+  getAdminProductsApi,
+  addAdminProductApi,
+  editAdminProductApi,
+  deleteAdminProductApi
 } from '@/utlis/api';
 
 export default {
   components: {
     ProductModal,
-    ProductDetailModal,
     ProudctDeleteModal,
     Pagination,
     Loading
@@ -128,11 +118,12 @@ export default {
       return currency(price, '$ ');
     },
     getProduct(page = 1) {
-      getProductApi(page)
+      getAdminProductsApi(page)
         .then((res) => {
           const {
             data: { products, pagination }
           } = res;
+          console.log(res);
 
           if (products === null) {
             this.products = [];
@@ -149,7 +140,7 @@ export default {
           this.$refs.loading.hide();
         });
     },
-    openModal(type = 'new', product) {
+    openModal(type, product) {
       if (type === 'new') {
         this.$refs.productModal.show();
       } else if (type === 'edit') {
@@ -158,14 +149,11 @@ export default {
       } else if (type === 'delete') {
         this.tempProduct = { ...product };
         this.$refs.productDeleteModal.show();
-      } else if (type === 'detail') {
-        this.tempProduct = { ...product };
-        this.$refs.productDetailModal.show();
       }
     },
     addProduct(product) {
       this.$refs.loading.show();
-      addProductApi(product)
+      addAdminProductApi(product)
         .then((res) => {
           const {
             data: { message = ' ' }
@@ -210,7 +198,7 @@ export default {
       const {
         data: { id }
       } = product;
-      editProductApi(id, product)
+      editAdminProductApi(id, product)
         .then((res) => {
           const {
             data: { message = ' ' }
@@ -255,7 +243,7 @@ export default {
     },
     deleteProduct(id) {
       this.$refs.loading.show();
-      deleteProductApi(id)
+      deleteAdminProductApi(id)
         .then(() => {
           this.$refs.loading.hide();
           Swal.fire({
@@ -284,40 +272,6 @@ export default {
             timerProgressBar: true,
             icon: 'error',
             title: '刪除失敗',
-            text: message
-          });
-        });
-    },
-    addShopCart(data) {
-      this.$refs.loading.show();
-      addShopCartApi(data)
-        .then(() => {
-          this.$refs.loading.hide();
-          Swal.fire({
-            toast: true,
-            position: 'top-end',
-            showConfirmButton: false,
-            timer: 1500,
-            timerProgressBar: true,
-            icon: 'success',
-            title: '增加購物車成功(๑•́ ₃ •̀๑)!'
-          });
-        })
-        .catch((err) => {
-          const {
-            response: {
-              data: { message }
-            }
-          } = err;
-          this.$refs.loading.hide();
-          Swal.fire({
-            toast: true,
-            position: 'top-end',
-            showConfirmButton: false,
-            timer: 1500,
-            timerProgressBar: true,
-            icon: 'error',
-            title: '增加購物車失敗',
             text: message
           });
         });

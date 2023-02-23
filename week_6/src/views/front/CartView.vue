@@ -2,41 +2,39 @@
   <div class="container">
     <div class="row justify-content-center py-5">
       <div class="col">
-        <h2>購物車</h2>
-        <div class="text-end mt-4">
-          <button
-            class="btn btn-outline-danger"
-            :disabled="cartsExist"
-            @click="openModal('deleteAll')"
-          >
-            清空購物車
-          </button>
-        </div>
+        <h2 class="text-center fw-bold">購物車</h2>
+        <p>
+          總共有<span class="fw-bold mx-1">{{ carts.length }}</span
+          >件商品
+        </p>
         <table class="table align-middle mt-4 table-hover">
           <thead>
-            <tr>
-              <th></th>
-              <th>品名</th>
+            <tr class="text-center">
+              <th width="200">商品圖片</th>
+              <th width="250">商品名稱</th>
+              <th>單位</th>
               <th style="width: 150px">數量/單位</th>
-              <th>單價</th>
+              <th>售價</th>
+              <th>小計</th>
+              <th>刪除</th>
             </tr>
           </thead>
           <tbody>
             <template v-if="carts">
-              <tr v-for="cart in carts" :key="cart.id">
+              <tr v-for="cart in carts" :key="cart.id" class="text-center">
                 <td>
-                  <button
-                    type="button"
-                    class="btn btn-outline-danger"
-                    @click="openModal('delete', cart)"
-                  >
-                    <i class="bi bi-x-lg"></i>
-                  </button>
+                  <div class="ratio ratio-16x9">
+                    <img
+                      :src="cart.product.imageUrl"
+                      class="img-fluid object-fit-cover rounded"
+                      :alt="cart.product.title"
+                    />
+                  </div>
                 </td>
                 <td>
                   {{ cart.product.title }}
-                  <div class="text-success" v-if="cart.coupon">已套用優惠券</div>
                 </td>
+                <td>1 / {{ cart.product.unit }}</td>
                 <td>
                   <div class="input-group input-group-sm">
                     <div class="input-group">
@@ -53,16 +51,21 @@
                     </div>
                   </div>
                 </td>
-                <td class="text-end">
-                  <small v-if="final_total !== total" class="text-success">折扣價：</small>
-                  {{ getPrice(cart.final_total) }}
+                <td>
+                  {{ getPrice(cart.total) }}
+                </td>
+                <td>{{ getPrice(cart.final_total) }}</td>
+                <td>
+                  <button type="button" class="btn" @click="openModal('delete', cart)">
+                    <i class="bi bi-trash3"></i>
+                  </button>
                 </td>
               </tr>
             </template>
           </tbody>
           <tfoot>
             <tr>
-              <td colspan="3" class="text-end">總計</td>
+              <td colspan="6" class="text-end">總計</td>
               <td class="text-end">{{ getPrice(total) }}</td>
             </tr>
             <tr v-if="final_total !== total">
@@ -72,21 +75,19 @@
           </tfoot>
         </table>
         <div class="d-grid gap-2 mt-4 d-md-flex justify-content-md-between">
-          <button
-            class="btn btn-outline-info me-md-2"
-            type="button"
-            @click="routerToPage('ProductList')"
-          >
+          <RouterLink class="btn btn-outline-info" :to="{ name: 'ProductList' }">
             繼續購物
-          </button>
+          </RouterLink>
           <button
-            type="button"
-            class="btn btn-outline-success"
+            class="btn btn-outline-danger"
             :disabled="cartsExist"
-            @click="routerToPage()"
+            @click="openModal('deleteAll')"
           >
-            送出訂單
+            清空購物車
           </button>
+          <RouterLink class="btn btn-outline-success" :to="{ name: 'Checkout' }"
+            >送出訂單</RouterLink
+          >
         </div>
       </div>
     </div>
@@ -107,13 +108,8 @@ import Loading from '@/components/Loading.vue';
 import ProductDeleteModal from '@/components/ProductDeleteModal.vue';
 import Swal from 'sweetalert2';
 
-import { currency } from '@/utlis/global.js';
-import {
-  getShopCartApi,
-  updateShopCartApi,
-  removeShopCartApi,
-  removeAllShopCartApi
-} from '@/utlis/api';
+import { currency } from '@/utlis/global';
+import { getCartApi, updateCartApi, removeCartApi, removeAllCartApi } from '@/utlis/api';
 
 export default {
   components: {
@@ -134,7 +130,7 @@ export default {
     }
   },
   methods: {
-    openModal(type = 'delete', cart) {
+    openModal(type, cart) {
       if (type === 'delete') {
         const { id, product } = cart;
         this.tempProduct = { ...product, cart_id: id };
@@ -147,8 +143,8 @@ export default {
     getPrice(price) {
       return currency(price, '$ ');
     },
-    getShopCart() {
-      getShopCartApi()
+    getCarts() {
+      getCartApi()
         .then((res) => {
           const {
             data: {
@@ -168,7 +164,7 @@ export default {
     updateCart(data) {
       this.$refs.loading.show();
       const { id, qty } = data;
-      updateShopCartApi(id, {
+      updateCartApi(id, {
         data: {
           product_id: id,
           qty
@@ -191,7 +187,7 @@ export default {
             title: message
           });
 
-          this.getShopCart();
+          this.getCarts();
         })
         .catch((err) => {
           console.log(err);
@@ -218,7 +214,7 @@ export default {
     },
     removeCartItem(id) {
       this.$refs.loading.show();
-      removeShopCartApi(id)
+      removeCartApi(id)
         .then(() => {
           this.$refs.loading.hide();
           Swal.fire({
@@ -230,7 +226,7 @@ export default {
             icon: 'success',
             title: '移除成功(･8･)！'
           });
-          this.getShopCart();
+          this.getCarts();
         })
         .catch((err) => {
           const {
@@ -253,7 +249,7 @@ export default {
     },
     removeAllCart() {
       this.$refs.loading.show();
-      removeAllShopCartApi()
+      removeAllCartApi()
         .then(() => {
           this.$refs.loading.hide();
           Swal.fire({
@@ -265,7 +261,7 @@ export default {
             icon: 'success',
             title: '移除成功(′゜ω。‵)！'
           });
-          this.getShopCart();
+          this.getCarts();
         })
         .catch((err) => {
           const {
@@ -285,13 +281,10 @@ export default {
             text: message
           });
         });
-    },
-    routerToPage(name = 'Checkout') {
-      this.$router.push({ name });
     }
   },
   mounted() {
-    this.getShopCart();
+    this.getCarts();
   }
 };
 </script>

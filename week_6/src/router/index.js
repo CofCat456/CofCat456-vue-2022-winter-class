@@ -1,46 +1,66 @@
-import { createRouter, createWebHistory } from 'vue-router';
-import LoginPage from '@/views/LoginPage.vue';
-import HomePage from '@/views/HomePage.vue';
-import ProductListPage from '@/views/ProductListPage.vue';
-import Checkout from '@/views/CheckoutPage.vue';
-import ShopCartPage from '@/views/ShopCartPage.vue';
-import Order from '@/views/OrderPage.vue';
+import { createRouter, createWebHashHistory } from 'vue-router';
 
-const path = process.env.NODE_ENV === 'production' ? '/vue-2022-winter-class/week_5/' : '';
-const history = createWebHistory(path);
+const { VITE_ROUTER_PATH = '' } = import.meta.env;
+
 const routes = [
   {
-    path: '/login',
-    name: 'Login',
-    component: LoginPage
-  },
-  {
     path: '/',
-    name: 'Home',
-    component: HomePage,
+    component: () => import('../Layout/FrontLayout.vue'),
     children: [
       {
-        path: 'productList',
-        name: 'ProductList',
-        component: ProductListPage
+        path: '',
+        name: 'Home',
+        component: () => import('../views/front/HomeView.vue')
       },
       {
-        path: 'shopCart',
-        name: 'ShopCart',
-        component: ShopCartPage
+        path: 'productList/:category?',
+        name: 'ProductList',
+        component: () => import('../views/front/ProductListView.vue')
+      },
+      {
+        path: 'product/:id',
+        name: 'Product',
+        component: () => import('../views/front/ProductView.vue')
+      },
+      {
+        path: 'cart',
+        name: 'Cart',
+        component: () => import('../views/front/CartView.vue')
       },
       {
         path: 'checkout',
         name: 'Checkout',
-        component: Checkout
+        component: () => import('../views/front/CheckoutView.vue')
       },
       {
-        path: 'order',
-        name: 'Order',
-        component: Order
+        path: 'login',
+        name: 'Login',
+        component: () => import('../views/front/LoginView.vue')
+      }
+    ]
+  },
+  {
+    path: '/admin',
+    name: 'AdminHome',
+    component: () => import('../Layout/Dashboard.vue'),
+    children: [
+      {
+        path: 'productList',
+        name: 'AdminProductList',
+        component: () => import('../views/admin/AdminProductList.vue')
+      },
+      {
+        path: 'orders',
+        name: 'AdminOrders',
+        component: () => import('../views/admin/AdminOrders.vue')
       }
     ]
   }
 ];
 
-export default createRouter({ history, routes, base: '/vue-2022-winter-class/week_5/' });
+export default createRouter({
+  history: createWebHashHistory(VITE_ROUTER_PATH),
+  linkActiveClass: 'active',
+  routes,
+  base: VITE_ROUTER_PATH
+});

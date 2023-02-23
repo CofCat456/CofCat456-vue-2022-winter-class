@@ -1,7 +1,9 @@
 <template>
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container">
-      <p class="navbar-brand m-0">Vue 直播班 第五週主線任務</p>
+      <RouterLink class="navbar-brand m-0" :to="{ name: titleLink.pathName }">{{
+        titleLink.title
+      }}</RouterLink>
       <button
         class="navbar-toggler"
         type="button"
@@ -15,37 +17,46 @@
       </button>
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav ms-auto">
-          <li class="nav-item">
+          <li v-for="{ title, pathName } in liLinks" :key="title" class="nav-item">
             <RouterLink
               class="nav-link"
-              :class="{ active: $route.name === 'ProductList' }"
-              :to="{ name: 'ProductList' }"
-              >產品列表</RouterLink
+              :class="{ active: $route.name === pathName }"
+              :to="{ name: pathName }"
+              >{{ title }}</RouterLink
             >
           </li>
-          <li class="nav-item">
-            <RouterLink
-              class="nav-link"
-              :class="{ active: $route.name === 'ShopCart' }"
-              :to="{ name: 'ShopCart' }"
-              >購物車</RouterLink
-            >
-          </li>
-          <li class="nav-item">
-            <RouterLink
-              class="nav-link"
-              :class="{ active: $route.name === 'Order' }"
-              :to="{ name: 'Order' }"
-              >訂單
-            </RouterLink>
-          </li>
-          <li class="nav-item ms-3">
-            <button type="button" class="btn btn-outline-secondary" @click="$emit('logout')">
-              登出
-            </button>
+          <li v-if="logout" class="nav-item ms-3">
+            <button type="button" class="btn btn-outline-secondary" @click="logout">登出</button>
           </li>
         </ul>
       </div>
     </div>
   </nav>
 </template>
+
+<script>
+export default {
+  props: {
+    headerList: {
+      type: Array,
+      default: () => []
+    },
+    logout: {
+      type: Function,
+      default: null
+    }
+  },
+  computed: {
+    titleLink() {
+      const { title, pathName } = this.headerList[0];
+      return {
+        title,
+        pathName
+      };
+    },
+    liLinks() {
+      return this.headerList.slice(1, this.headerList.length);
+    }
+  }
+};
+</script>
