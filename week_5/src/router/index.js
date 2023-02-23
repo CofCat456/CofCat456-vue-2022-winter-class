@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory } from 'vue-router';
+import { createRouter, createWebHashHistory } from 'vue-router';
 import LoginPage from '@/views/LoginPage.vue';
 import HomePage from '@/views/HomePage.vue';
 import ProductListPage from '@/views/ProductListPage.vue';
@@ -7,7 +7,7 @@ import ShopCartPage from '@/views/ShopCartPage.vue';
 import Order from '@/views/OrderPage.vue';
 
 const path = process.env.NODE_ENV === 'production' ? '/vue-2022-winter-class/week_5/' : '';
-const history = createWebHistory(path);
+const history = createWebHashHistory(path);
 const routes = [
   {
     path: '/login',

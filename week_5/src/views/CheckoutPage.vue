@@ -107,7 +107,7 @@ const { value: message } = register('message');
             <label for="tel" class="form-label">收件人電話</label>
             <input
               id="tel"
-              type="text"
+              type="tel"
               class="form-control"
               :class="{ 'is-invalid': errors['tel'] }"
               placeholder="請輸入電話"
