@@ -1,6 +1,7 @@
 import { createRouter, createWebHashHistory } from 'vue-router';
 
 const { VITE_ROUTER_PATH = '' } = import.meta.env;
+console.log(VITE_ROUTER_PATH);
 
 const routes = [
   {
