@@ -40,7 +40,7 @@
             <VField
               id="tel"
               name="tel"
-              type="text"
+              type="tel"
               class="form-control"
               :class="{ 'is-invalid': errors['tel'] }"
               placeholder="請輸入電話"
