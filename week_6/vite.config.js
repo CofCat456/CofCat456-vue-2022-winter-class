@@ -9,7 +9,7 @@ const { VITE_ROUTER_PATH } = config;
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  base: VITE_ROUTER_PATH,
+  base: process.env.NODE_ENV === 'production' ? VITE_ROUTER_PATH : '',
   plugins: [
     vue(),
     eslintPlugin({
