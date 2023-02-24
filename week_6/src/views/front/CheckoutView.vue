@@ -56,7 +56,7 @@
               type="text"
               class="form-control"
               :class="{ 'is-invalid': errors['address'] }"
-              placeholder="請輸入電話"
+              placeholder="請輸入地址"
             />
             <VErrorMessage name="address" class="invalid-feedback" />
           </div>
@@ -85,6 +85,7 @@
         </VForm>
       </div>
     </div>
+    <Loading ref="loading" />
   </section>
 </template>
 
@@ -92,15 +93,17 @@
 import { Form as VForm, Field as VField, ErrorMessage as VErrorMessage } from 'vee-validate';
 import * as yup from 'yup';
 import Swal from 'sweetalert2';
+import Loading from '@/components/Loading.vue';
 
-import { checkoutApi } from '@/utlis/api';
+import { getCartApi, checkoutApi } from '@/utlis/api';
 import { phoneRegExp } from '@/utlis/global';
 
 export default {
   components: {
     VForm,
     VField,
-    VErrorMessage
+    VErrorMessage,
+    Loading
   },
   data: () => ({
     loadingStatus: false
@@ -120,6 +123,34 @@ export default {
     }
   },
   methods: {
+    getCarts() {
+      this.$refs.loading.show();
+      getCartApi()
+        .then((res) => {
+          const {
+            data: {
+              data: { carts }
+            }
+          } = res;
+          if (carts.length === 0) {
+            Swal.fire({
+              toast: true,
+              position: 'top-end',
+              showConfirmButton: false,
+              timer: 1500,
+              timerProgressBar: true,
+              icon: 'error',
+              title: '購物車目前是空的唷(*´д`)'
+            });
+            this.$router.go(-1);
+          }
+          this.$refs.loading.hide();
+        })
+        .catch((err) => {
+          console.log(err);
+          this.$refs.loading.hide();
+        });
+    },
     handleSubmit(values) {
       this.loadingStatus = true;
 
@@ -156,6 +187,9 @@ export default {
           this.loadingStatus = false;
         });
     }
+  },
+  mounted() {
+    this.getCarts();
   }
 };
 </script>

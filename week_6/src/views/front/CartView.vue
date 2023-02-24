@@ -147,6 +147,7 @@ export default {
       return currency(price, '$ ');
     },
     getCarts() {
+      this.$refs.loading.show();
       getCartApi()
         .then((res) => {
           const {
