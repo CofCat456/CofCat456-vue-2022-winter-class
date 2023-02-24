@@ -124,7 +124,7 @@ const { value: message } = register('message');
               type="text"
               class="form-control"
               :class="{ 'is-invalid': errors['address'] }"
-              placeholder="請輸入電話"
+              placeholder="請輸入地址"
               v-bind="addressFieldAttrs"
               v-model="address"
             />
