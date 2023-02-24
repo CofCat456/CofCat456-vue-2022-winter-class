@@ -85,7 +85,10 @@
           >
             清空購物車
           </button>
-          <RouterLink class="btn btn-outline-success" :to="{ name: 'Checkout' }"
+          <RouterLink
+            class="btn btn-outline-success"
+            :class="{ disabled: carts.length === 0 }"
+            :to="{ name: 'Checkout' }"
             >送出訂單</RouterLink
           >
         </div>
