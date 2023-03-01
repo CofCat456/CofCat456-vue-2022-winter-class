@@ -53,14 +53,13 @@
 </template>
 
 <script>
-import Swal from 'sweetalert2';
 import Loading from '@/components/Loading.vue';
 import Breadcrumb from '@/components/Breadcrumb.vue';
+import ProductContent from '@/components/ProductContent.vue';
 
-import { currency } from '@/utlis/global';
+import { currency, successMsg, errorMsg } from '@/utlis/global';
 import { getProductApi, addToCartApi } from '@/utlis/api';
 import { categoryMap } from '@/utlis/context';
-import ProductContent from '../../components/ProductContent.vue';
 
 export default {
   components: {
@@ -100,28 +99,29 @@ export default {
     },
     getProduct(id) {
       this.$refs.loading.show();
+
       getProductApi(id)
         .then((res) => {
+          this.$refs.loading.hide();
+
           const {
             data: { product }
           } = res;
 
           this.product = product;
-          this.$refs.loading.hide();
         })
         .catch((err) => {
-          console.log(err);
-          Swal.fire({
-            toast: true,
-            position: 'top-end',
-            showConfirmButton: false,
-            timer: 1500,
-            timerProgressBar: true,
-            icon: 'error',
-            title: '商品不存在'
-          });
-          this.$router.push({ name: 'ProductList' });
           this.$refs.loading.hide();
+
+          const {
+            response: {
+              data: { message }
+            }
+          } = err;
+
+          errorMsg('商品不存在', message);
+
+          this.$router.push({ name: 'ProductList' });
         });
     },
     plus() {
@@ -132,6 +132,7 @@ export default {
     },
     addToCart() {
       this.$refs.loading.show();
+
       const data = {
         product_id: this.product.id,
         qty: this.qty
@@ -141,33 +142,18 @@ export default {
         .then(() => {
           this.$refs.loading.hide();
 
-          Swal.fire({
-            toast: true,
-            position: 'top-end',
-            showConfirmButton: false,
-            timer: 1500,
-            timerProgressBar: true,
-            icon: 'success',
-            title: '增加購物車成功(๑•́ ₃ •̀๑)!'
-          });
+          successMsg('增加購物車成功(๑•́ ₃ •̀๑)!');
         })
         .catch((err) => {
+          this.$refs.loading.hide();
+
           const {
             response: {
               data: { message }
             }
           } = err;
-          this.$refs.loading.hide();
-          Swal.fire({
-            toast: true,
-            position: 'top-end',
-            showConfirmButton: false,
-            timer: 1500,
-            timerProgressBar: true,
-            icon: 'error',
-            title: '增加購物車失敗',
-            text: message
-          });
+
+          errorMsg('增加購物車失敗', message);
         });
     }
   },

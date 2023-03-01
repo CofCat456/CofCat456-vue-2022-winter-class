@@ -19,7 +19,11 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="(product, index) in products" :key="product.id">
+            <tr
+              v-for="(product, index) in products"
+              :key="product.id"
+              :class="{ 'text-secondary': !product.is_enabled }"
+            >
               <td>{{ index + 1 }}</td>
               <td>{{ product.title }}</td>
               <td>
@@ -34,13 +38,18 @@
                 {{ getPrice(product.price) }}
               </td>
               <td>
-                <span
-                  :class="[
-                    'badge rounded-pill px-3 py-1',
-                    `bg-${product.is_enabled ? 'success' : 'secondary'}`
-                  ]"
-                  >{{ product.is_enabled ? '啟用' : '未啟用' }}</span
-                >
+                <div class="form-check form-switch">
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    :id="`paidSwitch${product.id}`"
+                    v-model="product.is_paid"
+                  />
+                  <label class="form-check-label" :for="`paidSwitch${product.id}`">
+                    <span v-if="product.is_paid">已啟用</span>
+                    <span v-else>未啟用</span>
+                  </label>
+                </div>
               </td>
               <td>
                 <div class="btn-group">
@@ -89,9 +98,8 @@ import ProductModal from '@/components/ProductModal.vue';
 import ProudctDeleteModal from '@/components/ProductDeleteModal.vue';
 import Pagination from '@/components/PaginationBasic.vue';
 import Loading from '@/components/Loading.vue';
-import Swal from 'sweetalert2';
 
-import { currency } from '@/utlis/global';
+import { currency, errorMsg, successMsg } from '@/utlis/global';
 import {
   getAdminProductsApi,
   addAdminProductApi,
@@ -117,28 +125,6 @@ export default {
     getPrice(price) {
       return currency(price, '$ ');
     },
-    getProduct(page = 1) {
-      getAdminProductsApi(page)
-        .then((res) => {
-          const {
-            data: { products, pagination }
-          } = res;
-
-          if (products === null) {
-            this.products = [];
-            return;
-          }
-
-          this.products = Object.values(products);
-          this.pagination = pagination;
-
-          this.$refs.loading.hide();
-        })
-        .catch((err) => {
-          console.log(err);
-          this.$refs.loading.hide();
-        });
-    },
     openModal(type, product) {
       if (type === 'new') {
         this.$refs.productModal.show();
@@ -150,75 +136,77 @@ export default {
         this.$refs.productDeleteModal.show();
       }
     },
+    getProduct(page = 1) {
+      getAdminProductsApi(page)
+        .then((res) => {
+          this.$refs.loading.hide();
+
+          const {
+            data: { products, pagination }
+          } = res;
+
+          if (products === null) {
+            this.products = [];
+            return;
+          }
+
+          this.products = Object.values(products);
+          this.pagination = pagination;
+        })
+        .catch(() => {
+          this.$refs.loading.hide();
+        });
+    },
     addProduct(product) {
       this.$refs.loading.show();
+
       addAdminProductApi(product)
         .then((res) => {
+          this.$refs.loading.hide();
+          this.$refs.productModal.hide();
+
           const {
             data: { message = ' ' }
           } = res;
-          this.$refs.productModal.hide();
-          this.$refs.loading.hide();
 
-          Swal.fire({
-            toast: true,
-            position: 'top-end',
-            showConfirmButton: false,
-            timer: 1500,
-            timerProgressBar: true,
-            icon: 'success',
-            title: message
-          });
+          successMsg(message);
 
           this.getProduct();
         })
         .catch((err) => {
+          this.$refs.loading.hide();
+
           const {
             response: {
               data: { message = [] }
             }
           } = err;
-          this.$refs.loading.hide();
 
-          Swal.fire({
-            toast: true,
-            position: 'top-end',
-            showConfirmButton: false,
-            timer: 1500,
-            timerProgressBar: true,
-            icon: 'error',
-            title: '新增失敗',
-            text: message
-          });
+          errorMsg('新增失敗', message);
         });
     },
     editProduct(product) {
       this.$refs.loading.show();
+
       const {
         data: { id }
       } = product;
+
       editAdminProductApi(id, product)
         .then((res) => {
+          this.$refs.loading.hide();
+          this.$refs[`productModal-${id}`][0].hide();
+
           const {
             data: { message = ' ' }
           } = res;
-          this.$refs[`productModal-${id}`][0].hide();
-          this.$refs.loading.hide();
 
-          Swal.fire({
-            toast: true,
-            position: 'top-end',
-            showConfirmButton: false,
-            timer: 1500,
-            timerProgressBar: true,
-            icon: 'success',
-            title: message
-          });
+          successMsg(message);
 
           this.getProduct();
         })
         .catch((err) => {
-          console.log(err);
+          this.$refs.loading.hide();
 
           const {
             response: {
@@ -226,53 +214,30 @@ export default {
             }
           } = err;
 
-          this.$refs.loading.hide();
-
-          Swal.fire({
-            toast: true,
-            position: 'top-end',
-            showConfirmButton: false,
-            timer: 1500,
-            timerProgressBar: true,
-            icon: 'error',
-            title: '編輯失敗',
-            text: message
-          });
+          errorMsg('編輯失敗', message);
         });
     },
     deleteProduct(id) {
       this.$refs.loading.show();
+
       deleteAdminProductApi(id)
         .then(() => {
           this.$refs.loading.hide();
-          Swal.fire({
-            toast: true,
-            position: 'top-end',
-            showConfirmButton: false,
-            timer: 1500,
-            timerProgressBar: true,
-            icon: 'success',
-            title: '刪除成功(*’ｰ’*)！'
-          });
+
+          successMsg('刪除成功(*’ｰ’*)！');
+
           this.getProduct();
         })
         .catch((err) => {
+          this.$refs.loading.hide();
+
           const {
             response: {
               data: { message }
             }
           } = err;
-          this.$refs.loading.hide();
-          Swal.fire({
-            toast: true,
-            position: 'top-end',
-            showConfirmButton: false,
-            timer: 1500,
-            timerProgressBar: true,
-            icon: 'error',
-            title: '刪除失敗',
-            text: message
-          });
+
+          errorMsg('刪除失敗', message);
         });
     }
   },

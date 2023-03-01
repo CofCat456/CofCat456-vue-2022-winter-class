@@ -92,11 +92,10 @@
 <script>
 import { Form as VForm, Field as VField, ErrorMessage as VErrorMessage } from 'vee-validate';
 import * as yup from 'yup';
-import Swal from 'sweetalert2';
 import Loading from '@/components/Loading.vue';
 
 import { getCartApi, checkoutApi } from '@/utlis/api';
-import { phoneRegExp } from '@/utlis/global';
+import { phoneRegExp, errorMsg, successMsg } from '@/utlis/global';
 
 export default {
   components: {
@@ -125,36 +124,40 @@ export default {
   methods: {
     getCarts() {
       this.$refs.loading.show();
+
       getCartApi()
         .then((res) => {
+          this.$refs.loading.hide();
+
           const {
             data: {
               data: { carts }
             }
           } = res;
+
           if (carts.length === 0) {
-            Swal.fire({
-              toast: true,
-              position: 'top-end',
-              showConfirmButton: false,
-              timer: 1500,
-              timerProgressBar: true,
-              icon: 'error',
-              title: '購物車目前是空的唷(*´д`)'
-            });
+            successMsg('購物車目前是空的唷(*´д`)');
+
             this.$router.go(-1);
           }
-          this.$refs.loading.hide();
         })
         .catch((err) => {
-          console.log(err);
           this.$refs.loading.hide();
+
+          const {
+            response: {
+              data: { message }
+            }
+          } = err;
+
+          errorMsg('加入購物車失敗', message);
         });
     },
     handleSubmit(values) {
       this.loadingStatus = true;
 
       const { email, name, tel, address, message } = values;
+
       checkoutApi({
         data: {
           user: {
@@ -169,22 +172,20 @@ export default {
         .then(() => {
           this.loadingStatus = false;
 
-          Swal.fire({
-            toast: true,
-            position: 'top-end',
-            showConfirmButton: false,
-            timer: 1500,
-            timerProgressBar: true,
-            icon: 'success',
-            title: '建立訂單成功 (ﾉ>ω<)ﾉ !'
-          });
+          successMsg('建立訂單成功 (ﾉ>ω<)ﾉ !');
 
           this.$router.push({ name: 'ProductList' });
         })
         .catch((err) => {
-          console.log(err);
+          this.$refs.loading.hide();
 
-          this.loadingStatus = false;
+          const {
+            response: {
+              data: { message }
+            }
+          } = err;
+
+          errorMsg('建立訂單失敗', message);
         });
     }
   },

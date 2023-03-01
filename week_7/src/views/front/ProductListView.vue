@@ -5,20 +5,15 @@
         <Breadcrumb :breadcrumbList="getBreadcrumb" />
       </div>
       <div class="col-md-2 col-12 mb-md-0 mb-3">
-        <CategoryList :currentCategory="currentCategory" />
+        <CategoryList
+          :currentCategory="currentCategory"
+          @updateCategory="(val) => (currentCategory = val)"
+        />
       </div>
       <div class="col">
         <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
           <div
-            v-for="{
-              id,
-              title,
-              category,
-              evaluate,
-              price,
-              origin_price,
-              imageUrl
-            } in filterProductsList"
+            v-for="{ id, title, category, evaluate, price, origin_price, imageUrl } in products"
             :key="id"
             class="col"
           >
@@ -86,10 +81,15 @@ export default {
           title: this.currentCategory === '全部' ? '產品列表' : `產品列表(${this.currentCategory})`
         }
       ];
-    },
-    filterProductsList() {
-      if (this.currentCategory === '全部') return this.products;
-      return this.products.filter(({ category }) => this.currentCategory === category);
+    }
+  },
+  watch: {
+    currentCategory() {
+      if (this.currentCategory === '全部') {
+        this.getProductList();
+      } else {
+        this.getProductList(this.currentCategory);
+      }
     }
   },
   methods: {
@@ -99,10 +99,13 @@ export default {
     getPrice(price) {
       return currency(price, 'NT ');
     },
-    getProductList() {
+    getProductList(category) {
       this.$refs.loading.show();
-      getProductsApi()
+
+      getProductsApi(category)
         .then((res) => {
+          this.$refs.loading.hide();
+
           const {
             data: { products }
           } = res;
@@ -113,11 +116,8 @@ export default {
           }
 
           this.products = Object.values(products);
-
-          this.$refs.loading.hide();
         })
-        .catch((err) => {
-          console.log(err);
+        .catch(() => {
           this.$refs.loading.hide();
         });
     },
@@ -127,14 +127,6 @@ export default {
   },
   mounted() {
     this.getProductList();
-
-    this.$watch(
-      () => this.$route.params,
-      (toParams) => {
-        const { category = '全部' } = toParams;
-        this.currentCategory = category;
-      }
-    );
   }
 };
 </script>

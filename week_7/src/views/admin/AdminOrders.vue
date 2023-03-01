@@ -8,7 +8,6 @@
             <tr>
               <th scope="col">#</th>
               <th scope="col">購買款項</th>
-              <th scope="col">顧客信箱</th>
               <th scope="col">顧客姓名</th>
               <th scope="col">應付金額</th>
               <th scope="col">狀態</th>
@@ -31,7 +30,6 @@
                     </li>
                   </ul>
                 </td>
-                <td>{{ order?.user?.email }}</td>
                 <td>{{ order?.user?.name }}</td>
                 <td>{{ order?.total }}</td>
                 <td>
@@ -92,19 +90,20 @@ export default {
     },
     getOrders() {
       this.$refs.loading.show();
+
       getOrdersApi()
         .then((res) => {
           this.$refs.loading.hide();
+
           const {
             data: { orders }
           } = res;
-          this.orders = orders;
 
+          this.orders = orders;
           console.log(this.orders);
           this.$refs.loading.hide();
         })
-        .catch((err) => {
-          console.log(err);
+        .catch(() => {
           this.$refs.loading.hide();
         });
     }

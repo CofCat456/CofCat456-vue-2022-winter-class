@@ -53,9 +53,9 @@
 <script>
 import { Form as VForm, Field as VField, ErrorMessage as VErrorMessage } from 'vee-validate';
 import * as yup from 'yup';
-import Swal from 'sweetalert2';
 
 import { loginApi } from '@/utlis/api';
+import { errorMsg, successMsg } from '@/utlis/global';
 
 export default {
   components: {
@@ -77,45 +77,35 @@ export default {
   methods: {
     handleSubmit(values) {
       this.loadingStatus = true;
+
       const { account, password } = values;
+
       loginApi({
         username: account,
         password
       })
         .then((res) => {
+          this.loadingStatus = false;
+
           const {
             data: { success, token, expired }
           } = res;
+
           if (success) {
-            Swal.fire({
-              toast: true,
-              position: 'top-end',
-              showConfirmButton: false,
-              timer: 1500,
-              timerProgressBar: true,
-              icon: 'success',
-              title: '登入成功 (*‘ v`*)'
-            });
+            successMsg('登入成功 (*‘ v`*)');
+
             document.cookie = `token=${token};expires=${new Date(expired)};`;
-            this.loadingStatus = false;
             this.$router.push({ name: 'AdminProductList' });
           }
         })
         .catch((err) => {
+          this.loadingStatus = false;
+
           const {
             response: { message }
           } = err;
-          Swal.fire({
-            toast: true,
-            position: 'top-end',
-            showConfirmButton: false,
-            timer: 1500,
-            timerProgressBar: true,
-            icon: 'error',
-            title: '登入失敗',
-            text: message
-          });
-          this.loadingStatus = false;
+
+          errorMsg('登入失敗', message);
         });
     }
   }

@@ -109,9 +109,8 @@
 <script>
 import Loading from '@/components/Loading.vue';
 import ProductDeleteModal from '@/components/ProductDeleteModal.vue';
-import Swal from 'sweetalert2';
 
-import { currency } from '@/utlis/global';
+import { currency, successMsg, errorMsg } from '@/utlis/global';
 import { getCartApi, updateCartApi, removeCartApi, removeAllCartApi } from '@/utlis/api';
 
 export default {
@@ -148,26 +147,38 @@ export default {
     },
     getCarts() {
       this.$refs.loading.show();
+
       getCartApi()
         .then((res) => {
+          this.$refs.loading.hide();
+
           const {
             data: {
               data: { carts, total, final_total: finalTotal }
             }
           } = res;
+
           this.carts = carts;
           this.total = total;
           this.final_total = finalTotal;
-          this.$refs.loading.hide();
         })
         .catch((err) => {
-          console.log(err);
           this.$refs.loading.hide();
+
+          const {
+            response: {
+              data: { message }
+            }
+          } = err;
+
+          errorMsg('獲取購物車失敗', message);
         });
     },
     updateCart(data) {
       this.$refs.loading.show();
+
       const { id, qty } = data;
+
       updateCartApi(id, {
         data: {
           product_id: id,
@@ -175,26 +186,18 @@ export default {
         }
       })
         .then((res) => {
+          this.$refs.loading.hide();
+
           const {
             data: { message = ' ' }
           } = res;
 
-          this.$refs.loading.hide();
-
-          Swal.fire({
-            toast: true,
-            position: 'top-end',
-            showConfirmButton: false,
-            timer: 1500,
-            timerProgressBar: true,
-            icon: 'success',
-            title: message
-          });
+          successMsg(message);
 
           this.getCarts();
         })
         .catch((err) => {
-          console.log(err);
+          this.$refs.loading.hide();
 
           const {
             response: {
@@ -202,88 +205,53 @@ export default {
             }
           } = err;
 
-          this.$refs.loading.hide();
-
-          Swal.fire({
-            toast: true,
-            position: 'top-end',
-            showConfirmButton: false,
-            timer: 1500,
-            timerProgressBar: true,
-            icon: 'error',
-            title: '更新失敗',
-            text: message
-          });
+          errorMsg('更新失敗', message);
         });
     },
     removeCartItem(id) {
       this.$refs.loading.show();
+
       removeCartApi(id)
         .then(() => {
           this.$refs.loading.hide();
-          Swal.fire({
-            toast: true,
-            position: 'top-end',
-            showConfirmButton: false,
-            timer: 1500,
-            timerProgressBar: true,
-            icon: 'success',
-            title: '移除成功(･8･)！'
-          });
+
+          successMsg('移除成功(･8･)！');
+
           this.getCarts();
         })
         .catch((err) => {
+          this.$refs.loading.hide();
+
           const {
             response: {
               data: { message }
             }
           } = err;
-          this.$refs.loading.hide();
-          Swal.fire({
-            toast: true,
-            position: 'top-end',
-            showConfirmButton: false,
-            timer: 1500,
-            timerProgressBar: true,
-            icon: 'error',
-            title: '移除失敗',
-            text: message
-          });
+
+          errorMsg('移除失敗', message);
         });
     },
     removeAllCart() {
       this.$refs.loading.show();
+
       removeAllCartApi()
         .then(() => {
           this.$refs.loading.hide();
-          Swal.fire({
-            toast: true,
-            position: 'top-end',
-            showConfirmButton: false,
-            timer: 1500,
-            timerProgressBar: true,
-            icon: 'success',
-            title: '移除成功(′゜ω。‵)！'
-          });
+
+          successMsg('移除成功(′゜ω。‵)！');
+
           this.getCarts();
         })
         .catch((err) => {
+          this.$refs.loading.hide();
+
           const {
             response: {
               data: { message }
             }
           } = err;
-          this.$refs.loading.hide();
-          Swal.fire({
-            toast: true,
-            position: 'top-end',
-            showConfirmButton: false,
-            timer: 1500,
-            timerProgressBar: true,
-            icon: 'error',
-            title: '移除失敗',
-            text: message
-          });
+
+          errorMsg('移除失敗', message);
         });
     }
   },

@@ -24,7 +24,7 @@ export default {
   },
   methods: {
     goCategory(category) {
-      this.$router.push(`/productList/${category}`);
+      this.$emit('updateCategory', category);
     }
   },
   computed: {
