@@ -45,10 +45,13 @@
                     class="form-check-input"
                     type="checkbox"
                     :id="`paidSwitch${product.id}`"
-                    v-model="product.is_paid"
+                    :true-value="1"
+                    :false-value="0"
+                    v-model="product.is_enabled"
+                    @change="updateEnabled(product)"
                   />
                   <label class="form-check-label" :for="`paidSwitch${product.id}`">
-                    <span v-if="product.is_paid">已啟用</span>
+                    <span v-if="product.is_enabled">已啟用</span>
                     <span v-else>未啟用</span>
                   </label>
                 </div>
@@ -73,7 +76,7 @@
                 editMode
                 :ref="`productModal-${product.id}`"
                 v-bind="product"
-                @edit="editProduct"
+                @edit="updateProduct"
               />
             </tr>
           </tbody>
@@ -105,7 +108,7 @@ import { currency, categoryMap, errorMsg, successMsg } from '@/utlis/global';
 import {
   getAdminProductsApi,
   addAdminProductApi,
-  editAdminProductApi,
+  updateAdminProductApi,
   deleteAdminProductApi
 } from '@/utlis/api';
 
@@ -190,14 +193,39 @@ export default {
           errorMsg('新增失敗', message);
         });
     },
-    editProduct(product) {
+    updateEnabled(product) {
+      this.$refs.loading.show();
+
+      const { id } = product;
+
+      updateAdminProductApi(id, { data: product })
+        .then(() => {
+          this.$refs.loading.hide();
+
+          successMsg('更新啟用狀態成功(つ´ω`)つ');
+
+          this.getProduct();
+        })
+        .catch((err) => {
+          this.$refs.loading.hide();
+
+          const {
+            response: {
+              data: { message }
+            }
+          } = err;
+
+          errorMsg('更新啟用狀態失敗', message);
+        });
+    },
+    updateProduct(product) {
       this.$refs.loading.show();
 
       const {
         data: { id }
       } = product;
 
-      editAdminProductApi(id, product)
+      updateAdminProductApi(id, product)
         .then((res) => {
           this.$refs.loading.hide();
           this.$refs[`productModal-${id}`][0].hide();
@@ -219,7 +247,7 @@ export default {
             }
           } = err;
 
-          errorMsg('編輯失敗', message);
+          errorMsg('更新失敗', message);
         });
     },
     deleteProduct(id) {

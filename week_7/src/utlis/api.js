@@ -50,7 +50,7 @@ export const addAdminProductApi = (data) => {
   return axios.post(adminProductUrl, data);
 };
 
-export const editAdminProductApi = (id, data) => {
+export const updateAdminProductApi = (id, data) => {
   axios.defaults.headers.common.Authorization = `${token}`;
   return axios.put(`${adminProductUrl}/${id}`, data);
 };
