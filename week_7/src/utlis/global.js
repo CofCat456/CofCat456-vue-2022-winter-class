@@ -12,6 +12,12 @@ export const phoneRegExp = /^09\d{2}[ -]?\d{3}[ -]?\d{3}$/;
 
 export const token = document.cookie.replace(/(?:(?:^|.*;\s*)token\s*=\s*([^;]*).*$)|^.*$/, '$1');
 
+export const categoryMap = new Map()
+  .set('鞋子', 'primary')
+  .set('褲子', 'info')
+  .set('衣服', 'success')
+  .set('帽子', 'warning');
+
 export const successMsg = (title, text) =>
   Swal.fire({
     toast: true,

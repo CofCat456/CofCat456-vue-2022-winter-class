@@ -27,9 +27,11 @@
               <td>{{ index + 1 }}</td>
               <td>{{ product.title }}</td>
               <td>
-                <span class="badge rounded-pill px-2 bg-info text-dark">{{
-                  product.category
-                }}</span>
+                <span
+                  class="badge rounded-pill px-2 text-dark"
+                  :class="getBadgeColor(product.category)"
+                  >{{ product.category }}</span
+                >
               </td>
               <td>
                 {{ getPrice(product.origin_price) }}
@@ -99,7 +101,7 @@ import ProudctDeleteModal from '@/components/ProductDeleteModal.vue';
 import Pagination from '@/components/PaginationBasic.vue';
 import Loading from '@/components/Loading.vue';
 
-import { currency, errorMsg, successMsg } from '@/utlis/global';
+import { currency, categoryMap, errorMsg, successMsg } from '@/utlis/global';
 import {
   getAdminProductsApi,
   addAdminProductApi,
@@ -122,6 +124,9 @@ export default {
     };
   },
   methods: {
+    getBadgeColor(category) {
+      return `text-bg-${categoryMap.get(category) || 'secondary'}`;
+    },
     getPrice(price) {
       return currency(price, '$ ');
     },

@@ -54,9 +54,8 @@ import Loading from '@/components/Loading.vue';
 import CategoryList from '@/components/CategoryList.vue';
 import Breadcrumb from '@/components/Breadcrumb.vue';
 
-import { currency } from '@/utlis/global';
+import { currency, categoryMap } from '@/utlis/global';
 import { getProductsApi } from '@/utlis/api';
-import { categoryMap } from '@/utlis/context';
 
 export default {
   components: {
