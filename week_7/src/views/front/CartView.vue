@@ -52,9 +52,9 @@
                   </div>
                 </td>
                 <td>
-                  {{ getPrice(cart.total) }}
+                  {{ $filters.currency(cart.total, 'NT ') }}
                 </td>
-                <td>{{ getPrice(cart.final_total) }}</td>
+                <td>{{ $filters.currency(cart.final_total, 'NT ') }}</td>
                 <td>
                   <button type="button" class="btn" @click="openModal('delete', cart)">
                     <i class="bi bi-trash3"></i>
@@ -66,11 +66,11 @@
           <tfoot>
             <tr>
               <td colspan="6" class="text-end">總計</td>
-              <td class="text-end">{{ getPrice(total) }}</td>
+              <td class="text-end">{{ $filters.currency(total, 'NT ') }}</td>
             </tr>
             <tr v-if="final_total !== total">
               <td colspan="3" class="text-end text-success">折扣價</td>
-              <td class="text-end text-success">{{ getPrice(final_total) }}</td>
+              <td class="text-end text-success">{{ $filters.currency(final_total, 'NT ') }}</td>
             </tr>
           </tfoot>
         </table>
@@ -110,7 +110,7 @@
 import Loading from '@/components/Loading.vue';
 import ProductDeleteModal from '@/components/ProductDeleteModal.vue';
 
-import { currency, successMsg, errorMsg } from '@/utlis/global';
+import { successMsg, errorMsg } from '@/utlis/global';
 import { getCartApi, updateCartApi, removeCartApi, removeAllCartApi } from '@/utlis/api';
 
 export default {
@@ -142,9 +142,6 @@ export default {
         this.$refs.productDeleteModal.show();
       }
     },
-    getPrice(price) {
-      return currency(price, '$ ');
-    },
     getCarts() {
       this.$refs.loading.show();
 
@@ -165,13 +162,9 @@ export default {
         .catch((err) => {
           this.$refs.loading.hide();
 
-          const {
-            response: {
-              data: { message }
-            }
-          } = err;
+          const { response } = err;
 
-          errorMsg('獲取購物車失敗', message);
+          errorMsg('獲取購物車失敗', response);
         });
     },
     updateCart(data) {
@@ -199,13 +192,9 @@ export default {
         .catch((err) => {
           this.$refs.loading.hide();
 
-          const {
-            response: {
-              data: { message }
-            }
-          } = err;
+          const { response } = err;
 
-          errorMsg('更新失敗', message);
+          errorMsg('更新失敗', response);
         });
     },
     removeCartItem(id) {
@@ -222,13 +211,9 @@ export default {
         .catch((err) => {
           this.$refs.loading.hide();
 
-          const {
-            response: {
-              data: { message }
-            }
-          } = err;
+          const { response } = err;
 
-          errorMsg('移除失敗', message);
+          errorMsg('移除失敗', response);
         });
     },
     removeAllCart() {
@@ -245,13 +230,9 @@ export default {
         .catch((err) => {
           this.$refs.loading.hide();
 
-          const {
-            response: {
-              data: { message }
-            }
-          } = err;
+          const { response } = err;
 
-          errorMsg('移除失敗', message);
+          errorMsg('移除失敗', response);
         });
     }
   },

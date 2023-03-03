@@ -144,13 +144,9 @@ export default {
         .catch((err) => {
           this.$refs.loading.hide();
 
-          const {
-            response: {
-              data: { message }
-            }
-          } = err;
+          const { response } = err;
 
-          errorMsg('加入購物車失敗', message);
+          errorMsg('加入購物車失敗', response);
         });
     },
     handleSubmit(values) {
@@ -179,13 +175,9 @@ export default {
         .catch((err) => {
           this.$refs.loading.hide();
 
-          const {
-            response: {
-              data: { message }
-            }
-          } = err;
+          const { response } = err;
 
-          errorMsg('建立訂單失敗', message);
+          errorMsg('建立訂單失敗', response);
         });
     }
   },

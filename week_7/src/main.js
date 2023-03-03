@@ -12,7 +12,14 @@ import 'bootstrap/dist/js/bootstrap';
 import App from './App.vue';
 import router from './router';
 
+import { currency, date } from './utlis/global';
+
 const app = createApp(App);
+
+app.config.globalProperties.$filters = {
+  currency,
+  date
+};
 
 app.use(router);
 app.use(LoadingPlugin);

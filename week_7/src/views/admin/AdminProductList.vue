@@ -34,10 +34,10 @@
                 >
               </td>
               <td>
-                {{ getPrice(product.origin_price) }}
+                {{ $filters.currency(product.origin_price, 'NT ') }}
               </td>
               <td>
-                {{ getPrice(product.price) }}
+                {{ $filters.currency(product.price, 'NT ') }}
               </td>
               <td>
                 <div class="form-check form-switch">
@@ -82,16 +82,13 @@
           </tbody>
         </table>
         <Pagination v-bind="pagination" @emit-pages="getProduct" />
-        <p>
-          目前有 <span class="text-info">{{ products.length }}</span> 項產品
-        </p>
       </div>
     </div>
     <ProudctDeleteModal
       ref="productDeleteModal"
       :id="tempProduct.id"
       :title="tempProduct.title"
-      @delete="deleteProduct"
+      @delete="delProduct"
     />
   </div>
   <ProductModal ref="productModal" @add="addProduct" />
@@ -104,7 +101,7 @@ import ProudctDeleteModal from '@/components/ProductDeleteModal.vue';
 import Pagination from '@/components/PaginationBasic.vue';
 import Loading from '@/components/Loading.vue';
 
-import { currency, categoryMap, errorMsg, successMsg } from '@/utlis/global';
+import { categoryMap, errorMsg, successMsg } from '@/utlis/global';
 import {
   getAdminProductsApi,
   addAdminProductApi,
@@ -129,9 +126,6 @@ export default {
   methods: {
     getBadgeColor(category) {
       return `text-bg-${categoryMap.get(category) || 'secondary'}`;
-    },
-    getPrice(price) {
-      return currency(price, '$ ');
     },
     openModal(type, product) {
       if (type === 'new') {
@@ -161,8 +155,12 @@ export default {
           this.products = Object.values(products);
           this.pagination = pagination;
         })
-        .catch(() => {
+        .catch((err) => {
           this.$refs.loading.hide();
+
+          const { response } = err;
+
+          errorMsg('獲取商品列表失敗', response);
         });
     },
     addProduct(product) {
@@ -184,13 +182,9 @@ export default {
         .catch((err) => {
           this.$refs.loading.hide();
 
-          const {
-            response: {
-              data: { message = [] }
-            }
-          } = err;
+          const { response } = err;
 
-          errorMsg('新增失敗', message);
+          errorMsg('新增失敗', response);
         });
     },
     updateEnabled(product) {
@@ -209,13 +203,9 @@ export default {
         .catch((err) => {
           this.$refs.loading.hide();
 
-          const {
-            response: {
-              data: { message }
-            }
-          } = err;
+          const { response } = err;
 
-          errorMsg('更新啟用狀態失敗', message);
+          errorMsg('更新啟用狀態失敗', response);
         });
     },
     updateProduct(product) {
@@ -241,36 +231,28 @@ export default {
         .catch((err) => {
           this.$refs.loading.hide();
 
-          const {
-            response: {
-              data: { message }
-            }
-          } = err;
+          const { response } = err;
 
-          errorMsg('更新失敗', message);
+          errorMsg('更新失敗', response);
         });
     },
-    deleteProduct(id) {
+    delProduct(id) {
       this.$refs.loading.show();
 
       deleteAdminProductApi(id)
         .then(() => {
           this.$refs.loading.hide();
 
-          successMsg('刪除成功(*’ｰ’*)！');
+          successMsg('刪除產品成功(*’ｰ’*)！');
 
           this.getProduct();
         })
         .catch((err) => {
           this.$refs.loading.hide();
 
-          const {
-            response: {
-              data: { message }
-            }
-          } = err;
+          const { response } = err;
 
-          errorMsg('刪除失敗', message);
+          errorMsg('刪除產品失敗', response);
         });
     }
   },

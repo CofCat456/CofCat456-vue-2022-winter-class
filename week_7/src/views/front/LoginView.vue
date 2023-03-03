@@ -101,11 +101,9 @@ export default {
         .catch((err) => {
           this.loadingStatus = false;
 
-          const {
-            response: { message }
-          } = err;
+          const { response } = err;
 
-          errorMsg('登入失敗', message);
+          errorMsg('登入失敗', response);
         });
     }
   }

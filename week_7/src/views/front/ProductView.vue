@@ -19,7 +19,7 @@
         }}</span>
         <h2 class="mb-3 fw-bold">{{ product.title }}</h2>
         <p class="flex-fill">{{ product.description }}</p>
-        <h2 class="mb-3 fw-bold">{{ getPrice }}</h2>
+        <h2 class="mb-3 fw-bold">{{ $filters.currency(product.price, 'NT ') }}</h2>
         <div class="input-group w-50 mb-3">
           <button class="btn btn-outline-secondary" type="button" @click="dash">
             <i class="bi bi-dash"></i>
@@ -57,7 +57,7 @@ import Loading from '@/components/Loading.vue';
 import Breadcrumb from '@/components/Breadcrumb.vue';
 import ProductContent from '@/components/ProductContent.vue';
 
-import { currency, successMsg, errorMsg } from '@/utlis/global';
+import { successMsg, errorMsg } from '@/utlis/global';
 import { getProductApi, addToCartApi } from '@/utlis/api';
 import { categoryMap } from '@/utlis/context';
 
@@ -88,9 +88,6 @@ export default {
           title: this.product.title
         }
       ];
-    },
-    getPrice() {
-      return currency(this.product.price, 'NT ');
     }
   },
   methods: {
@@ -113,13 +110,9 @@ export default {
         .catch((err) => {
           this.$refs.loading.hide();
 
-          const {
-            response: {
-              data: { message }
-            }
-          } = err;
+          const { response } = err;
 
-          errorMsg('商品不存在', message);
+          errorMsg('商品不存在', response);
 
           this.$router.push({ name: 'ProductList' });
         });
@@ -147,13 +140,9 @@ export default {
         .catch((err) => {
           this.$refs.loading.hide();
 
-          const {
-            response: {
-              data: { message }
-            }
-          } = err;
+          const { response } = err;
 
-          errorMsg('增加購物車失敗', message);
+          errorMsg('增加購物車失敗', response);
         });
     }
   },

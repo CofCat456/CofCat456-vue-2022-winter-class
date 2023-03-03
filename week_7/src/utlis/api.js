@@ -13,6 +13,7 @@ const cartUrl = `${VITE_URL}/api/${VITE_PATH}/cart`;
 const orderUrl = `${VITE_URL}/api/${VITE_PATH}/order`;
 
 const adminProductUrl = `${VITE_URL}/api/${VITE_PATH}/admin/product`;
+const adminOrderUrl = `${VITE_URL}/api/${VITE_PATH}/admin/order`;
 const uploadFileUrl = `${VITE_URL}/api/${VITE_PATH}/admin/upload`;
 
 export const loginApi = (data) => axios.post(loginUrl, data);
@@ -23,7 +24,6 @@ export const addToCartApi = (data) => axios.post(cartUrl, data);
 export const updateCartApi = (id, data) => axios.put(`${cartUrl}/${id}`, data);
 export const removeCartApi = (id) => axios.delete(`${cartUrl}/${id}`);
 export const removeAllCartApi = () => axios.delete(`${cartUrl}s`);
-export const getOrdersApi = () => axios.get(`${orderUrl}s`);
 
 export const getProductsApi = (category) => {
   if (category) {
@@ -63,4 +63,19 @@ export const deleteAdminProductApi = (id) => {
 export const uploadFileApi = (data) => {
   axios.defaults.headers.common.Authorization = `${token}`;
   return axios.post(uploadFileUrl, data);
+};
+
+export const getAdminOrdersApi = (page) => {
+  axios.defaults.headers.common.Authorization = `${token}`;
+  return axios.get(`${adminOrderUrl}s?page=${page}`);
+};
+
+export const updateAdminOrderApi = (id, data) => {
+  axios.defaults.headers.common.Authorization = `${token}`;
+  return axios.put(`${adminOrderUrl}/${id}`, data);
+};
+
+export const deleteAdminOrderApi = (id) => {
+  axios.defaults.headers.common.Authorization = `${token}`;
+  return axios.delete(`${adminOrderUrl}/${id}`);
 };

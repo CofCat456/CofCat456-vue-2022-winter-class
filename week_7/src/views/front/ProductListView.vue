@@ -36,9 +36,9 @@
                   </p>
                 </div>
                 <p class="mt-auto mb-0 lh-1 fs-7 text-muted text-decoration-line-through">
-                  {{ getPrice(origin_price) }}
+                  {{ $filters.currency(origin_price, 'NT ') }}
                 </p>
-                <p class="mb-0 fw-bold">{{ getPrice(price) }}</p>
+                <p class="mb-0 fw-bold">{{ $filters.currency(price, 'NT ') }}</p>
               </div>
             </div>
           </div>
@@ -54,7 +54,7 @@ import Loading from '@/components/Loading.vue';
 import CategoryList from '@/components/CategoryList.vue';
 import Breadcrumb from '@/components/Breadcrumb.vue';
 
-import { currency, categoryMap } from '@/utlis/global';
+import { categoryMap, errorMsg } from '@/utlis/global';
 import { getProductsApi } from '@/utlis/api';
 
 export default {
@@ -95,9 +95,6 @@ export default {
     getBadgeColor(category) {
       return `text-bg-${categoryMap.get(category) || 'secondary'}`;
     },
-    getPrice(price) {
-      return currency(price, 'NT ');
-    },
     getProductList(category) {
       this.$refs.loading.show();
 
@@ -116,8 +113,12 @@ export default {
 
           this.products = Object.values(products);
         })
-        .catch(() => {
+        .catch((err) => {
           this.$refs.loading.hide();
+
+          const { response } = err;
+
+          errorMsg('獲取商品列表失敗', response);
         });
     },
     goDetail(id) {

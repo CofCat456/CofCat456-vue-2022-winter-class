@@ -11,8 +11,7 @@
       <div class="modal-content border-0">
         <div class="modal-header bg-danger text-white">
           <h5 id="delProductModalLabel" class="modal-title">
-            <span v-if="shopCart">移出購物車</span>
-            <span v-else>刪除產品</span>
+            <span>刪除訂單</span>
           </h5>
           <button
             type="button"
@@ -21,13 +20,9 @@
             aria-label="Close"
           ></button>
         </div>
-        <div v-if="shopCart" class="modal-body">
-          是否移除
-          <strong class="text-danger">{{ title }}</strong> 產品(移除後需至產品頁面重新加入)。
-        </div>
-        <div v-else class="modal-body">
-          是否刪除
-          <strong class="text-danger">{{ title }}</strong> 商品(刪除後將無法恢復)。
+        <div class="modal-body">
+          是否刪除客戶
+          <strong class="text-danger">{{ title }}</strong> 的訂單(刪除後將無法恢復)。
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
@@ -45,10 +40,6 @@ import ModalMixin from '@/mixins/modalMixin';
 
 export default {
   props: {
-    shopCart: {
-      type: Boolean,
-      default: false
-    },
     id: {
       type: String,
       default: ''
@@ -66,11 +57,7 @@ export default {
   },
   methods: {
     deleteHandler() {
-      if (this.id.length === 0) {
-        this.$emit('deleteAll');
-      } else {
-        this.$emit('delete', this.id);
-      }
+      this.$emit('delete', this.id);
       this.hide();
     }
   }

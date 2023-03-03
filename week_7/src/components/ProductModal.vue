@@ -4,6 +4,7 @@
     id="productModal"
     ref="modal"
     class="modal fade text-start"
+    role="dialog"
     tabindex="-1"
     aria-labelledby="productModalLabel"
     aria-hidden="true"
@@ -187,7 +188,7 @@
 </template>
 
 <script>
-import ModalMixin from '@/mixins/ModalMixins';
+import modalMixin from '@/mixins/modalMixin';
 
 import { uploadFileApi } from '@/utlis/api';
 
@@ -250,7 +251,7 @@ export default {
       default: 0
     }
   },
-  mixins: [ModalMixin],
+  mixins: [modalMixin],
   data() {
     return {
       modal: {},

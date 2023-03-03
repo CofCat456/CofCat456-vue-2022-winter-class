@@ -39,6 +39,7 @@
                       type="checkbox"
                       :id="`paidSwitch${order.id}`"
                       v-model="order.is_paid"
+                      @change="updatePaid(order)"
                     />
                     <label class="form-check-label" :for="`paidSwitch${order.id}`">
                       <span v-if="order.is_paid">已付款</span>
@@ -48,63 +49,137 @@
                 </td>
                 <td>
                   <div class="btn-group">
-                    <button class="btn btn-outline-primary btn-sm">編輯</button>
-                    <button class="btn btn-outline-danger btn-sm">刪除</button>
+                    <button
+                      class="btn btn-outline-primary btn-sm"
+                      @click="openModal('detail', order)"
+                    >
+                      查看
+                    </button>
+                    <button
+                      class="btn btn-outline-danger btn-sm"
+                      @click="openModal('delete', order)"
+                    >
+                      刪除
+                    </button>
                   </div>
                 </td>
               </tr>
             </template>
           </tbody>
         </table>
+        <Pagination v-bind="pagination" @emit-pages="getOrders" />
       </div>
     </div>
+    <OrderModal ref="orderModal" :order="tempOrder" @update-paid="updatePaid"></OrderModal>
+    <OrderDeleteModal
+      ref="orderDeleteModal"
+      :id="tempOrder.id"
+      :title="tempOrder?.user?.name"
+      @delete="delOrder"
+    />
     <Loading ref="loading" />
   </div>
 </template>
 
 <script>
 import Loading from '@/components/Loading.vue';
+import Pagination from '@/components/PaginationBasic.vue';
+import OrderModal from '@/components/OrderModal.vue';
+import OrderDeleteModal from '@/components/OrderDeleteModal.vue';
 
-import { getOrdersApi } from '@/utlis/api';
+import { getAdminOrdersApi, updateAdminOrderApi, deleteAdminOrderApi } from '@/utlis/api';
+import { errorMsg, successMsg } from '@/utlis/global';
 
 export default {
   components: {
-    Loading
+    Loading,
+    Pagination,
+    OrderDeleteModal,
+    OrderModal
   },
   data() {
     return {
-      tempProduct: {},
-      orders: []
+      tempOrder: {},
+      orders: [],
+      pagination: {}
     };
   },
   methods: {
-    openModal(type, cart) {
+    openModal(type, order) {
       if (type === 'delete') {
-        const { id, product } = cart;
-        this.tempProduct = { ...product, cart_id: id };
-        this.$refs.productDeleteModal.show();
-      } else if (type === 'deleteAll') {
-        this.tempProduct = { title: '全部購物車' };
-        this.$refs.productDeleteModal.show();
+        this.tempOrder = { ...order };
+        this.$refs.orderDeleteModal.show();
+      } else if (type === 'detail') {
+        this.tempOrder = { ...order };
+        this.$refs.orderModal.show();
       }
     },
-    getOrders() {
+    getOrders(page = 1) {
       this.$refs.loading.show();
 
-      getOrdersApi()
+      getAdminOrdersApi(page)
         .then((res) => {
           this.$refs.loading.hide();
 
           const {
-            data: { orders }
+            data: { orders, pagination }
           } = res;
 
           this.orders = orders;
-          console.log(this.orders);
-          this.$refs.loading.hide();
+          this.pagination = pagination;
         })
-        .catch(() => {
+        .catch((err) => {
           this.$refs.loading.hide();
+
+          const { response } = err;
+
+          errorMsg('獲取訂單列表失敗', response);
+        });
+    },
+    updatePaid(order) {
+      this.$refs.loading.show();
+
+      const { id } = order;
+
+      const paid = {
+        is_paid: order.is_paid
+      };
+
+      updateAdminOrderApi(id, { data: paid })
+        .then((res) => {
+          this.$refs.loading.hide();
+
+          const {
+            data: { message }
+          } = res;
+
+          successMsg(message);
+        })
+        .catch((err) => {
+          this.$refs.loading.hide();
+
+          const { response } = err;
+
+          errorMsg('更新訂單資訊失敗', response);
+        });
+    },
+    delOrder(id) {
+      this.$refs.loading.show();
+
+      deleteAdminOrderApi(id)
+        .then(() => {
+          this.$refs.loading.hide();
+
+          successMsg('刪除訂單成功(*’ｰ’*)！');
+
+          this.getOrders();
+        })
+        .catch((err) => {
+          this.$refs.loading.hide();
+
+          const { response } = err;
+
+          errorMsg('刪除訂單失敗', response);
         });
     }
   },
