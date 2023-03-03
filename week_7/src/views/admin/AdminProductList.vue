@@ -72,18 +72,19 @@
                   </button>
                 </div>
               </td>
-              <ProductModal
-                editMode
-                :ref="`productModal-${product.id}`"
-                v-bind="product"
-                @edit="updateProduct"
-              />
             </tr>
           </tbody>
         </table>
         <Pagination v-bind="pagination" @emit-pages="getProduct" />
       </div>
     </div>
+    <ProductModal
+      ref="productModal"
+      :isNew="isNew"
+      :product="tempProduct"
+      @add-product="addProduct"
+      @update-product="updateProduct"
+    />
     <ProudctDeleteModal
       ref="productDeleteModal"
       :id="tempProduct.id"
@@ -91,7 +92,6 @@
       @delete="delProduct"
     />
   </div>
-  <ProductModal ref="productModal" @add="addProduct" />
   <Loading ref="loading" />
 </template>
 
@@ -118,6 +118,7 @@ export default {
   },
   data() {
     return {
+      isNew: false,
       products: [],
       tempProduct: {},
       pagination: {}
@@ -129,10 +130,13 @@ export default {
     },
     openModal(type, product) {
       if (type === 'new') {
+        this.isNew = true;
+        this.tempProduct = {};
         this.$refs.productModal.show();
       } else if (type === 'edit') {
-        const { id } = product;
-        this.$refs[`productModal-${id}`][0].show();
+        this.isNew = false;
+        this.tempProduct = { ...product };
+        this.$refs.productModal.show();
       } else if (type === 'delete') {
         this.tempProduct = { ...product };
         this.$refs.productDeleteModal.show();
@@ -172,10 +176,14 @@ export default {
           this.$refs.productModal.hide();
 
           const {
-            data: { message = ' ' }
+            data: { success, message = ' ' }
           } = res;
 
-          successMsg(message);
+          if (success) {
+            successMsg(message);
+          } else {
+            errorMsg(message);
+          }
 
           this.getProduct();
         })
@@ -218,13 +226,17 @@ export default {
       updateAdminProductApi(id, product)
         .then((res) => {
           this.$refs.loading.hide();
-          this.$refs[`productModal-${id}`][0].hide();
+          this.$refs.productModal.hide();
 
           const {
-            data: { message = ' ' }
+            data: { success, message = ' ' }
           } = res;
 
-          successMsg(message);
+          if (success) {
+            successMsg(message);
+          } else {
+            errorMsg(message);
+          }
 
           this.getProduct();
         })

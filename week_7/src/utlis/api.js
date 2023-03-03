@@ -60,9 +60,13 @@ export const deleteAdminProductApi = (id) => {
   return axios.delete(`${adminProductUrl}/${id}`);
 };
 
-export const uploadFileApi = (data) => {
+export const uploadFileApi = (formData) => {
   axios.defaults.headers.common.Authorization = `${token}`;
-  return axios.post(uploadFileUrl, data);
+  return axios.post(uploadFileUrl, formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    }
+  });
 };
 
 export const getAdminOrdersApi = (page) => {
