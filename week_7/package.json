@@ -9,6 +9,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@ckeditor/ckeditor5-build-classic": "^36.0.1",
+    "@ckeditor/ckeditor5-vue": "^4.0.1",
     "@popperjs/core": "^2.11.6",
     "@vorms/core": "^1.0.0",
     "@vorms/resolvers": "^1.0.0",
