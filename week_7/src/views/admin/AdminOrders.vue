@@ -74,13 +74,14 @@
       </div>
     </div>
     <OrderModal ref="orderModal" :order="tempOrder" @update-paid="updatePaid"></OrderModal>
-    <OrderDeleteModal
+    <DeleteModal
       ref="orderDeleteModal"
       :id="tempOrder.id"
       :title="tempOrder?.user?.name"
-      @delete-order="delOrder"
-      @delete-all-order="delAllOrder"
-    />
+      @delete="delOrder"
+      @deleteAll="delAllOrder"
+      >訂單</DeleteModal
+    >
     <Loading ref="loading" />
   </div>
 </template>
@@ -89,7 +90,7 @@
 import Loading from '@/components/Loading.vue';
 import Pagination from '@/components/PaginationBasic.vue';
 import OrderModal from '@/components/OrderModal.vue';
-import OrderDeleteModal from '@/components/OrderDeleteModal.vue';
+import DeleteModal from '@/components/DeleteModal.vue';
 
 import {
   getAdminOrdersApi,
@@ -103,7 +104,7 @@ export default {
   components: {
     Loading,
     Pagination,
-    OrderDeleteModal,
+    DeleteModal,
     OrderModal
   },
   data() {
@@ -124,7 +125,7 @@ export default {
       } else if (type === 'deleteAll') {
         this.tempOrder = {
           user: {
-            name: '所有'
+            name: '所有訂單'
           }
         };
         this.$refs.orderDeleteModal.show();

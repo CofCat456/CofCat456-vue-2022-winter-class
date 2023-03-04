@@ -17,7 +17,7 @@
           </h5>
           <button
             type="button"
-            class="btn-close"
+            class="btn-close btn-close-white"
             data-bs-dismiss="modal"
             aria-label="Close"
           ></button>
@@ -191,7 +191,9 @@
           <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
             取消
           </button>
-          <button type="button" class="btn btn-primary" @click="sureHandler">確認</button>
+          <button type="button" class="btn btn-primary" @click="sureHandler">
+            {{ isNew ? '新增產品' : '更新產品' }}
+          </button>
         </div>
       </div>
     </div>
@@ -206,13 +208,13 @@ import { errorMsg, successMsg } from '@/utlis/global';
 
 export default {
   props: {
-    product: {
-      type: Object,
-      default: () => {}
-    },
     isNew: {
       type: Boolean,
       default: false
+    },
+    product: {
+      type: Object,
+      default: () => {}
     }
   },
   data() {

@@ -14,6 +14,7 @@ const orderUrl = `${VITE_URL}/api/${VITE_PATH}/order`;
 
 const adminProductUrl = `${VITE_URL}/api/${VITE_PATH}/admin/product`;
 const adminOrderUrl = `${VITE_URL}/api/${VITE_PATH}/admin/order`;
+const adminCouponsUrl = `${VITE_URL}/api/${VITE_PATH}/admin/coupon`;
 const uploadFileUrl = `${VITE_URL}/api/${VITE_PATH}/admin/upload`;
 
 export const loginApi = (data) => axios.post(loginUrl, data);
@@ -87,4 +88,24 @@ export const deleteAdminOrderApi = (id) => {
 export const deleteAllAdminOrderApi = () => {
   axios.defaults.headers.common.Authorization = `${token}`;
   return axios.delete(`${adminOrderUrl}s/all`);
+};
+
+export const getAdminCouponsApi = (page) => {
+  axios.defaults.headers.common.Authorization = `${token}`;
+  return axios.get(`${adminCouponsUrl}s?page=${page}`);
+};
+
+export const addAdminCouponApi = (data) => {
+  axios.defaults.headers.common.Authorization = `${token}`;
+  return axios.post(adminCouponsUrl, data);
+};
+
+export const updateAdminCouponApi = (id, data) => {
+  axios.defaults.headers.common.Authorization = `${token}`;
+  return axios.put(`${adminCouponsUrl}/${id}`, data);
+};
+
+export const deleteAdminCouponApi = (id) => {
+  axios.defaults.headers.common.Authorization = `${token}`;
+  return axios.delete(`${adminCouponsUrl}/${id}`);
 };

@@ -88,7 +88,7 @@ export default {
           this.loadingStatus = false;
 
           const {
-            data: { success, token, expired }
+            data: { success, message, token, expired }
           } = res;
 
           if (success) {
@@ -96,6 +96,8 @@ export default {
 
             document.cookie = `token=${token};expires=${new Date(expired)};`;
             this.$router.push({ name: 'AdminProductList' });
+          } else {
+            errorMsg(message, '帳號或密碼錯誤');
           }
         })
         .catch((err) => {

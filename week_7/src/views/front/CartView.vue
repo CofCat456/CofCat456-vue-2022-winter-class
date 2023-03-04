@@ -95,20 +95,21 @@
       </div>
     </div>
     <Loading ref="loading" />
-    <ProductDeleteModal
+    <DeleteModal
       ref="productDeleteModal"
-      :shopCart="true"
       :id="tempProduct.cart_id"
       :title="tempProduct.title"
       @delete="removeCartItem"
       @deleteAll="removeAllCart"
-    />
+    >
+      購物車
+    </DeleteModal>
   </div>
 </template>
 
 <script>
 import Loading from '@/components/Loading.vue';
-import ProductDeleteModal from '@/components/ProductDeleteModal.vue';
+import DeleteModal from '@/components/DeleteModal.vue';
 
 import { successMsg, errorMsg } from '@/utlis/global';
 import { getCartApi, updateCartApi, removeCartApi, removeAllCartApi } from '@/utlis/api';
@@ -116,7 +117,7 @@ import { getCartApi, updateCartApi, removeCartApi, removeAllCartApi } from '@/ut
 export default {
   components: {
     Loading,
-    ProductDeleteModal
+    DeleteModal
   },
   data() {
     return {

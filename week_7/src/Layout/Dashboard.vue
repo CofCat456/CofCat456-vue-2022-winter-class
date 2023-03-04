@@ -1,21 +1,17 @@
 <template>
   <HeaderBasic :headerList="getHeaderList" :logout="logout" />
   <RouterView />
-  <Loading ref="loading" />
 </template>
 
 <script>
 import HeaderBasic from '@/components/HeaderBasic.vue';
-import Loading from '@/components/Loading.vue';
-import Swal from 'sweetalert2';
 
 import { checkLoginApi, logoutApi } from '@/utlis/api';
-import { token } from '@/utlis/global';
+import { token, errorMsg, successMsg } from '@/utlis/global';
 
 export default {
   components: {
-    HeaderBasic,
-    Loading
+    HeaderBasic
   },
   computed: {
     getHeaderList() {
@@ -31,6 +27,10 @@ export default {
         {
           title: '訂單管理',
           pathName: 'AdminOrders'
+        },
+        {
+          title: '優惠卷管理',
+          pathName: 'AdminCoupons'
         }
       ];
     }
@@ -38,47 +38,32 @@ export default {
   methods: {
     logout() {
       logoutApi().then(() => {
-        Swal.fire({
-          toast: true,
-          position: 'top-end',
-          showConfirmButton: false,
-          timer: 1500,
-          timerProgressBar: true,
-          icon: 'success',
-          title: '登出成功 ฅ●ω●ฅ'
-        });
+        successMsg('登出成功 ฅ●ω●ฅ');
+
         this.$router.push({ name: 'Login' });
       });
     },
     expiredToken() {
-      Swal.fire({
-        toast: true,
-        position: 'top-end',
-        showConfirmButton: false,
-        timer: 1500,
-        timerProgressBar: true,
-        icon: 'error',
-        title: 'token 已過期 (′゜ω。‵)'
-      });
+      errorMsg('token 已過期 (′゜ω。‵)');
+
       this.$router.push({ name: 'Login' });
     },
     checkLogin() {
-      this.$refs.loading.show();
-
       checkLoginApi()
         .then((res) => {
           const {
             data: { success }
           } = res;
 
-          this.$refs.loading.hide();
-
           if (!success) {
             this.$router.push({ name: 'Login' });
           }
         })
-        .catch(() => {
-          this.$refs.loading.hide();
+        .catch((err) => {
+          const { response } = err;
+
+          errorMsg(response);
+
           this.$router.push({ name: 'Login' });
         });
     }

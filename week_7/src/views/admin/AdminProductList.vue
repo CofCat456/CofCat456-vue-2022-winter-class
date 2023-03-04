@@ -27,11 +27,9 @@
               <td>{{ index + 1 }}</td>
               <td>{{ product.title }}</td>
               <td>
-                <span
-                  class="badge rounded-pill px-2 text-dark"
-                  :class="getBadgeColor(product.category)"
-                  >{{ product.category }}</span
-                >
+                <span class="badge rounded-pill px-2" :class="getBadgeColor(product.category)">{{
+                  product.category
+                }}</span>
               </td>
               <td>
                 {{ $filters.currency(product.origin_price, 'NT ') }}
@@ -85,21 +83,22 @@
       @add-product="addProduct"
       @update-product="updateProduct"
     />
-    <ProudctDeleteModal
+    <DeleteModal
       ref="productDeleteModal"
       :id="tempProduct.id"
       :title="tempProduct.title"
       @delete="delProduct"
-    />
+      >產品</DeleteModal
+    >
     <Loading ref="loading" />
   </div>
 </template>
 
 <script>
-import ProductModal from '@/components/ProductModal.vue';
-import ProudctDeleteModal from '@/components/ProductDeleteModal.vue';
-import Pagination from '@/components/PaginationBasic.vue';
 import Loading from '@/components/Loading.vue';
+import Pagination from '@/components/PaginationBasic.vue';
+import ProductModal from '@/components/ProductModal.vue';
+import DeleteModal from '@/components/DeleteModal.vue';
 
 import { categoryMap, errorMsg, successMsg } from '@/utlis/global';
 import {
@@ -111,10 +110,10 @@ import {
 
 export default {
   components: {
-    ProductModal,
-    ProudctDeleteModal,
+    Loading,
     Pagination,
-    Loading
+    ProductModal,
+    DeleteModal
   },
   data() {
     return {
@@ -192,7 +191,7 @@ export default {
 
           const { response } = err;
 
-          errorMsg('新增失敗', response);
+          errorMsg('新增產品失敗', response);
         });
     },
     updateEnabled(product) {
@@ -245,7 +244,7 @@ export default {
 
           const { response } = err;
 
-          errorMsg('更新失敗', response);
+          errorMsg('更新產品失敗', response);
         });
     },
     delProduct(id) {
