@@ -83,3 +83,8 @@ export const deleteAdminOrderApi = (id) => {
   axios.defaults.headers.common.Authorization = `${token}`;
   return axios.delete(`${adminOrderUrl}/${id}`);
 };
+
+export const deleteAllAdminOrderApi = () => {
+  axios.defaults.headers.common.Authorization = `${token}`;
+  return axios.delete(`${adminOrderUrl}s/all`);
+};

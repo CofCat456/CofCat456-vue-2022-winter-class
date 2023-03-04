@@ -91,8 +91,8 @@
       :title="tempProduct.title"
       @delete="delProduct"
     />
+    <Loading ref="loading" />
   </div>
-  <Loading ref="loading" />
 </template>
 
 <script>

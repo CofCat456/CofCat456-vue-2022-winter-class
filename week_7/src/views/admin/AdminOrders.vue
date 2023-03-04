@@ -67,6 +67,9 @@
             </template>
           </tbody>
         </table>
+        <div class="text-end mt-4">
+          <button class="btn btn-danger" @click="openModal('deleteAll')">刪除所有訂單</button>
+        </div>
         <Pagination v-bind="pagination" @emit-pages="getOrders" />
       </div>
     </div>
@@ -75,7 +78,8 @@
       ref="orderDeleteModal"
       :id="tempOrder.id"
       :title="tempOrder?.user?.name"
-      @delete="delOrder"
+      @delete-order="delOrder"
+      @delete-all-order="delAllOrder"
     />
     <Loading ref="loading" />
   </div>
@@ -87,7 +91,12 @@ import Pagination from '@/components/PaginationBasic.vue';
 import OrderModal from '@/components/OrderModal.vue';
 import OrderDeleteModal from '@/components/OrderDeleteModal.vue';
 
-import { getAdminOrdersApi, updateAdminOrderApi, deleteAdminOrderApi } from '@/utlis/api';
+import {
+  getAdminOrdersApi,
+  updateAdminOrderApi,
+  deleteAdminOrderApi,
+  deleteAllAdminOrderApi
+} from '@/utlis/api';
 import { errorMsg, successMsg } from '@/utlis/global';
 
 export default {
@@ -112,6 +121,13 @@ export default {
       } else if (type === 'detail') {
         this.tempOrder = { ...order };
         this.$refs.orderModal.show();
+      } else if (type === 'deleteAll') {
+        this.tempOrder = {
+          user: {
+            name: '所有'
+          }
+        };
+        this.$refs.orderDeleteModal.show();
       }
     },
     getOrders(page = 1) {
@@ -180,6 +196,23 @@ export default {
           const { response } = err;
 
           errorMsg('刪除訂單失敗', response);
+        });
+    },
+    delAllOrder() {
+      deleteAllAdminOrderApi()
+        .then(() => {
+          this.$refs.loading.hide();
+
+          successMsg('刪除所有訂單成功(ﾟω´)！');
+
+          this.getOrders();
+        })
+        .catch((err) => {
+          this.$refs.loading.hide();
+
+          const { response } = err;
+
+          errorMsg('刪除所有訂單失敗', response);
         });
     }
   },

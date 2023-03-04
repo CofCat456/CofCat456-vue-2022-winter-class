@@ -21,7 +21,7 @@
           ></button>
         </div>
         <div class="modal-body">
-          是否刪除客戶
+          是否刪除
           <strong class="text-danger">{{ title }}</strong> 的訂單(刪除後將無法恢復)。
         </div>
         <div class="modal-footer">
@@ -57,7 +57,11 @@ export default {
   },
   methods: {
     deleteHandler() {
-      this.$emit('delete', this.id);
+      if (this.id) {
+        this.$emit('delete-order', this.id);
+      } else {
+        this.$emit('delete-all-order');
+      }
       this.hide();
     }
   }
