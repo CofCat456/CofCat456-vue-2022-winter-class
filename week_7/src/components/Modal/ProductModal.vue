@@ -204,7 +204,7 @@
 import modalMixin from '@/mixins/modalMixin';
 
 import { uploadFileApi } from '@/utlis/api';
-import { errorMsg, successMsg } from '@/utlis/global';
+import { responseMsg, errorMsg } from '@/utlis/global';
 
 export default {
   props: {
@@ -255,20 +255,18 @@ export default {
           if (success) {
             this.tempProduct.imageUrl = imageUrl;
             this.$refs.fileInput.value = '';
-
-            successMsg('圖片上傳結果', message);
           } else {
             this.$refs.fileInput.value = '';
-
-            errorMsg('圖片上傳結果', message);
           }
+
+          responseMsg(success, message);
         })
         .catch((err) => {
           const { response } = err;
 
           this.status.fileUploading = false;
 
-          errorMsg('圖片失敗', response);
+          errorMsg(response);
         });
     },
     sureHandler() {

@@ -97,10 +97,10 @@
 <script>
 import Loading from '@/components/Loading.vue';
 import Pagination from '@/components/PaginationBasic.vue';
-import ProductModal from '@/components/ProductModal.vue';
-import DeleteModal from '@/components/DeleteModal.vue';
+import ProductModal from '@/components/Modal/ProductModal.vue';
+import DeleteModal from '@/components/Modal/DeleteModal.vue';
 
-import { categoryMap, errorMsg, successMsg } from '@/utlis/global';
+import { categoryMap, errorMsg, responseMsg } from '@/utlis/global';
 import {
   getAdminProductsApi,
   addAdminProductApi,
@@ -147,7 +147,7 @@ export default {
           this.$refs.loading.hide();
 
           const {
-            data: { products, pagination }
+            data: { success, products, pagination }
           } = res;
 
           if (products === null) {
@@ -155,15 +155,17 @@ export default {
             return;
           }
 
-          this.products = Object.values(products);
-          this.pagination = pagination;
+          if (success) {
+            this.products = Object.values(products);
+            this.pagination = pagination;
+          }
         })
         .catch((err) => {
           this.$refs.loading.hide();
 
           const { response } = err;
 
-          errorMsg('獲取商品列表失敗', response);
+          errorMsg(response);
         });
     },
     addProduct(product) {
@@ -178,11 +180,7 @@ export default {
             data: { success, message = ' ' }
           } = res;
 
-          if (success) {
-            successMsg(message);
-          } else {
-            errorMsg(message);
-          }
+          responseMsg(success, message);
 
           this.getProduct();
         })
@@ -191,7 +189,7 @@ export default {
 
           const { response } = err;
 
-          errorMsg('新增產品失敗', response);
+          errorMsg(response);
         });
     },
     updateEnabled(product) {
@@ -200,10 +198,14 @@ export default {
       const { id } = product;
 
       updateAdminProductApi(id, { data: product })
-        .then(() => {
+        .then((res) => {
           this.$refs.loading.hide();
 
-          successMsg('更新啟用狀態成功(つ´ω`)つ');
+          const {
+            data: { success, message = ' ' }
+          } = res;
+
+          responseMsg(success, message);
 
           this.getProduct();
         })
@@ -212,7 +214,7 @@ export default {
 
           const { response } = err;
 
-          errorMsg('更新啟用狀態失敗', response);
+          errorMsg(response);
         });
     },
     updateProduct(product) {
@@ -231,11 +233,7 @@ export default {
             data: { success, message = ' ' }
           } = res;
 
-          if (success) {
-            successMsg(message);
-          } else {
-            errorMsg(message);
-          }
+          responseMsg(success, message);
 
           this.getProduct();
         })
@@ -244,17 +242,21 @@ export default {
 
           const { response } = err;
 
-          errorMsg('更新產品失敗', response);
+          errorMsg(response);
         });
     },
     delProduct(id) {
       this.$refs.loading.show();
 
       deleteAdminProductApi(id)
-        .then(() => {
+        .then((res) => {
           this.$refs.loading.hide();
 
-          successMsg('刪除產品成功(*’ｰ’*)！');
+          const {
+            data: { success, message }
+          } = res;
+
+          responseMsg(success, message);
 
           this.getProduct();
         })
@@ -263,7 +265,7 @@ export default {
 
           const { response } = err;
 
-          errorMsg('刪除產品失敗', response);
+          errorMsg(response);
         });
     }
   },

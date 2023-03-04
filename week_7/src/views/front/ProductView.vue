@@ -57,7 +57,7 @@ import Loading from '@/components/Loading.vue';
 import Breadcrumb from '@/components/Breadcrumb.vue';
 import ProductContent from '@/components/ProductContent.vue';
 
-import { successMsg, errorMsg } from '@/utlis/global';
+import { errorMsg, responseMsg } from '@/utlis/global';
 import { getProductApi, addToCartApi } from '@/utlis/api';
 import { categoryMap } from '@/utlis/context';
 
@@ -102,17 +102,19 @@ export default {
           this.$refs.loading.hide();
 
           const {
-            data: { product }
+            data: { success, product }
           } = res;
 
-          this.product = product;
+          if (success) {
+            this.product = product;
+          }
         })
         .catch((err) => {
           this.$refs.loading.hide();
 
           const { response } = err;
 
-          errorMsg('商品不存在', response);
+          errorMsg(response);
 
           this.$router.push({ name: 'ProductList' });
         });
@@ -132,22 +134,27 @@ export default {
       };
 
       addToCartApi({ data })
-        .then(() => {
+        .then((res) => {
           this.$refs.loading.hide();
 
-          successMsg('增加購物車成功(๑•́ ₃ •̀๑)!');
+          const {
+            data: { success, message }
+          } = res;
+
+          responseMsg(success, message);
         })
         .catch((err) => {
           this.$refs.loading.hide();
 
           const { response } = err;
 
-          errorMsg('增加購物車失敗', response);
+          errorMsg(response);
         });
     }
   },
   mounted() {
     const { id } = this.$route.params;
+
     this.getProduct(id);
   }
 };

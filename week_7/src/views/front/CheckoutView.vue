@@ -95,7 +95,7 @@ import * as yup from 'yup';
 import Loading from '@/components/Loading.vue';
 
 import { getCartApi, checkoutApi } from '@/utlis/api';
-import { phoneRegExp, errorMsg, successMsg } from '@/utlis/global';
+import { phoneRegExp, responseMsg, errorMsg } from '@/utlis/global';
 
 export default {
   components: {
@@ -131,14 +131,20 @@ export default {
 
           const {
             data: {
+              success,
+              message,
               data: { carts }
             }
           } = res;
 
-          if (carts.length === 0) {
-            successMsg('購物車目前是空的唷(*´д`)');
+          if (success && carts.length === 0) {
+            errorMsg('購物車目前是空的唷(*´д`)');
 
             this.$router.go(-1);
+          }
+
+          if (success === false) {
+            errorMsg(message);
           }
         })
         .catch((err) => {
@@ -146,7 +152,7 @@ export default {
 
           const { response } = err;
 
-          errorMsg('加入購物車失敗', response);
+          errorMsg(response);
         });
     },
     handleSubmit(values) {
@@ -165,10 +171,14 @@ export default {
           message
         }
       })
-        .then(() => {
+        .then((res) => {
           this.loadingStatus = false;
 
-          successMsg('建立訂單成功 (ﾉ>ω<)ﾉ !');
+          const {
+            data: { success, message: msg }
+          } = res;
+
+          responseMsg(success, msg);
 
           this.$router.push({ name: 'ProductList' });
         })
@@ -177,7 +187,7 @@ export default {
 
           const { response } = err;
 
-          errorMsg('建立訂單失敗', response);
+          errorMsg(response);
         });
     }
   },

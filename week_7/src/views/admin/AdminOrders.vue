@@ -89,8 +89,8 @@
 <script>
 import Loading from '@/components/Loading.vue';
 import Pagination from '@/components/PaginationBasic.vue';
-import OrderModal from '@/components/OrderModal.vue';
-import DeleteModal from '@/components/DeleteModal.vue';
+import OrderModal from '@/components/Modal/OrderModal.vue';
+import DeleteModal from '@/components/Modal/DeleteModal.vue';
 
 import {
   getAdminOrdersApi,
@@ -98,7 +98,7 @@ import {
   deleteAdminOrderApi,
   deleteAllAdminOrderApi
 } from '@/utlis/api';
-import { errorMsg, successMsg } from '@/utlis/global';
+import { errorMsg, responseMsg } from '@/utlis/global';
 
 export default {
   components: {
@@ -139,18 +139,20 @@ export default {
           this.$refs.loading.hide();
 
           const {
-            data: { orders, pagination }
+            data: { success, orders, pagination }
           } = res;
 
-          this.orders = orders;
-          this.pagination = pagination;
+          if (success) {
+            this.orders = orders;
+            this.pagination = pagination;
+          }
         })
         .catch((err) => {
           this.$refs.loading.hide();
 
           const { response } = err;
 
-          errorMsg('獲取訂單列表失敗', response);
+          errorMsg(response);
         });
     },
     updatePaid(order) {
@@ -167,53 +169,65 @@ export default {
           this.$refs.loading.hide();
 
           const {
-            data: { message }
+            data: { success, message }
           } = res;
 
-          successMsg(message);
+          responseMsg(success, message);
         })
         .catch((err) => {
           this.$refs.loading.hide();
 
           const { response } = err;
 
-          errorMsg('更新訂單資訊失敗', response);
+          errorMsg(response);
         });
     },
     delOrder(id) {
       this.$refs.loading.show();
 
       deleteAdminOrderApi(id)
-        .then(() => {
+        .then((res) => {
           this.$refs.loading.hide();
 
-          successMsg('刪除訂單成功(*’ｰ’*)！');
+          const {
+            data: { success, message }
+          } = res;
 
-          this.getOrders();
+          if (success) {
+            this.getOrders();
+          }
+
+          responseMsg(success, message);
         })
         .catch((err) => {
           this.$refs.loading.hide();
 
           const { response } = err;
 
-          errorMsg('刪除訂單失敗', response);
+          errorMsg(response);
         });
     },
     delAllOrder() {
       deleteAllAdminOrderApi()
-        .then(() => {
+        .then((res) => {
           this.$refs.loading.hide();
 
-          successMsg('刪除所有訂單成功(ﾟω´)！');
+          const {
+            data: { success, message }
+          } = res;
 
-          this.getOrders();
+          if (success) {
+            this.getOrders();
+          }
+
+          responseMsg(success, message);
         })
         .catch((err) => {
           this.$refs.loading.hide();
 
           const { response } = err;
 
-          errorMsg('刪除所有訂單失敗', response);
+          errorMsg(response);
         });
     }
   },

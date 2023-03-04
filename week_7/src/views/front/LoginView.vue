@@ -55,7 +55,7 @@ import { Form as VForm, Field as VField, ErrorMessage as VErrorMessage } from 'v
 import * as yup from 'yup';
 
 import { loginApi } from '@/utlis/api';
-import { errorMsg, successMsg } from '@/utlis/global';
+import { responseMsg, errorMsg } from '@/utlis/global';
 
 export default {
   components: {
@@ -92,20 +92,18 @@ export default {
           } = res;
 
           if (success) {
-            successMsg('登入成功 (*‘ v`*)');
-
             document.cookie = `token=${token};expires=${new Date(expired)};`;
             this.$router.push({ name: 'AdminProductList' });
-          } else {
-            errorMsg(message, '帳號或密碼錯誤');
           }
+
+          responseMsg(success, message);
         })
         .catch((err) => {
           this.loadingStatus = false;
 
           const { response } = err;
 
-          errorMsg('登入失敗', response);
+          errorMsg(response);
         });
     }
   }

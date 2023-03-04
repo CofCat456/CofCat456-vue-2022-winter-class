@@ -14,7 +14,8 @@ const orderUrl = `${VITE_URL}/api/${VITE_PATH}/order`;
 
 const adminProductUrl = `${VITE_URL}/api/${VITE_PATH}/admin/product`;
 const adminOrderUrl = `${VITE_URL}/api/${VITE_PATH}/admin/order`;
-const adminCouponsUrl = `${VITE_URL}/api/${VITE_PATH}/admin/coupon`;
+const adminCouponUrl = `${VITE_URL}/api/${VITE_PATH}/admin/coupon`;
+const adminArticleUrl = `${VITE_URL}/api/${VITE_PATH}/admin/article`;
 const uploadFileUrl = `${VITE_URL}/api/${VITE_PATH}/admin/upload`;
 
 export const loginApi = (data) => axios.post(loginUrl, data);
@@ -92,20 +93,45 @@ export const deleteAllAdminOrderApi = () => {
 
 export const getAdminCouponsApi = (page) => {
   axios.defaults.headers.common.Authorization = `${token}`;
-  return axios.get(`${adminCouponsUrl}s?page=${page}`);
+  return axios.get(`${adminCouponUrl}s?page=${page}`);
 };
 
 export const addAdminCouponApi = (data) => {
   axios.defaults.headers.common.Authorization = `${token}`;
-  return axios.post(adminCouponsUrl, data);
+  return axios.post(adminCouponUrl, data);
 };
 
 export const updateAdminCouponApi = (id, data) => {
   axios.defaults.headers.common.Authorization = `${token}`;
-  return axios.put(`${adminCouponsUrl}/${id}`, data);
+  return axios.put(`${adminCouponUrl}/${id}`, data);
 };
 
 export const deleteAdminCouponApi = (id) => {
   axios.defaults.headers.common.Authorization = `${token}`;
-  return axios.delete(`${adminCouponsUrl}/${id}`);
+  return axios.delete(`${adminCouponUrl}/${id}`);
+};
+
+export const getAdminArticlesApi = (page) => {
+  axios.defaults.headers.common.Authorization = `${token}`;
+  return axios.get(`${adminArticleUrl}s?page=${page}`);
+};
+
+export const addAdminArticleApi = (data) => {
+  axios.defaults.headers.common.Authorization = `${token}`;
+  return axios.post(adminArticleUrl, data);
+};
+
+export const updateAdminArticleApi = (id, data) => {
+  axios.defaults.headers.common.Authorization = `${token}`;
+  return axios.put(`${adminArticleUrl}/${id}`, data);
+};
+
+export const deleteAdminArticleApi = (id) => {
+  axios.defaults.headers.common.Authorization = `${token}`;
+  return axios.delete(`${adminArticleUrl}/${id}`);
+};
+
+export const getAdminArticleApi = (id) => {
+  axios.defaults.headers.common.Authorization = `${token}`;
+  return axios.get(`${adminArticleUrl}/${id}`, id);
 };

@@ -103,22 +103,24 @@ export default {
           this.$refs.loading.hide();
 
           const {
-            data: { products }
+            data: { success, products }
           } = res;
 
-          if (products === null) {
-            this.products = [];
-            return;
-          }
+          if (success) {
+            if (products === null) {
+              this.products = [];
+              return;
+            }
 
-          this.products = Object.values(products);
+            this.products = Object.values(products);
+          }
         })
         .catch((err) => {
           this.$refs.loading.hide();
 
           const { response } = err;
 
-          errorMsg('獲取商品列表失敗', response);
+          errorMsg(response);
         });
     },
     goDetail(id) {

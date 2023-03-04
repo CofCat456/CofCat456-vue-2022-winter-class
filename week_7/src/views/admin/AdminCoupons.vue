@@ -57,7 +57,7 @@
     <DeleteModal
       ref="couponDeleteModal"
       :id="tempCoupon.id"
-      :title="tempCoupon?.title"
+      :title="tempCoupon.title"
       @delete="delCoupon"
       >優惠卷</DeleteModal
     >
@@ -68,8 +68,8 @@
 <script>
 import Loading from '@/components/Loading.vue';
 import Pagination from '@/components/PaginationBasic.vue';
-import CouponModal from '@/components/CouponModal.vue';
-import DeleteModal from '@/components/DeleteModal.vue';
+import CouponModal from '@/components/Modal/CouponModal.vue';
+import DeleteModal from '@/components/Modal/DeleteModal.vue';
 
 import {
   getAdminCouponsApi,
@@ -77,7 +77,7 @@ import {
   updateAdminCouponApi,
   deleteAdminCouponApi
 } from '@/utlis/api';
-import { errorMsg, successMsg } from '@/utlis/global';
+import { errorMsg, responseMsg } from '@/utlis/global';
 
 export default {
   components: {
@@ -103,7 +103,7 @@ export default {
     };
   },
   methods: {
-    openModal(type, coupons) {
+    openModal(type, coupon) {
       if (type === 'new') {
         this.isNew = true;
         this.tempCoupon = {
@@ -112,10 +112,10 @@ export default {
         this.$refs.couponModal.show();
       } else if (type === 'edit') {
         this.isNew = false;
-        this.tempCoupon = { ...coupons };
+        this.tempCoupon = { ...coupon };
         this.$refs.couponModal.show();
       } else if (type === 'delete') {
-        this.tempCoupon = { ...coupons };
+        this.tempCoupon = { ...coupon };
         this.$refs.couponDeleteModal.show();
       }
     },
@@ -127,18 +127,20 @@ export default {
           this.$refs.loading.hide();
 
           const {
-            data: { coupons, pagination }
+            data: { success, coupons, pagination }
           } = res;
 
-          this.coupons = coupons;
-          this.pagination = pagination;
+          if (success) {
+            this.coupons = coupons;
+            this.pagination = pagination;
+          }
         })
         .catch((err) => {
           this.$refs.loading.hide();
 
           const { response } = err;
 
-          errorMsg('獲取優惠卷列表失敗', response);
+          errorMsg(response);
         });
     },
     addCoupon(coupon) {
@@ -153,11 +155,7 @@ export default {
             data: { success, message = ' ' }
           } = res;
 
-          if (success) {
-            successMsg(message);
-          } else {
-            errorMsg(message);
-          }
+          responseMsg(success, message);
 
           this.getCoupons();
         })
@@ -166,7 +164,7 @@ export default {
 
           const { response } = err;
 
-          errorMsg('新增優惠卷失敗', response);
+          errorMsg(response);
         });
     },
     updateCoupon(coupon) {
@@ -183,30 +181,7 @@ export default {
             data: { success, message = ' ' }
           } = res;
 
-          if (success) {
-            successMsg(message);
-          } else {
-            errorMsg(message);
-          }
-
-          this.getProduct();
-        })
-        .catch((err) => {
-          this.$refs.loading.hide();
-
-          const { response } = err;
-
-          errorMsg('更新優惠卷失敗', response);
-        });
-    },
-    delCoupon(id) {
-      this.$refs.loading.show();
-
-      deleteAdminCouponApi(id)
-        .then(() => {
-          this.$refs.loading.hide();
-
-          successMsg('刪除優惠卷成功(*°ω°*ฅ)*！');
+          responseMsg(success, message);
 
           this.getCoupons();
         })
@@ -215,7 +190,30 @@ export default {
 
           const { response } = err;
 
-          errorMsg('刪除優惠卷失敗', response);
+          errorMsg(response);
+        });
+    },
+    delCoupon(id) {
+      this.$refs.loading.show();
+
+      deleteAdminCouponApi(id)
+        .then((res) => {
+          this.$refs.loading.hide();
+
+          const {
+            data: { success, message }
+          } = res;
+
+          responseMsg(success, message);
+
+          this.getCoupons();
+        })
+        .catch((err) => {
+          this.$refs.loading.hide();
+
+          const { response } = err;
+
+          errorMsg(response);
         });
     }
   },

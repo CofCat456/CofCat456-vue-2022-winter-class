@@ -6,6 +6,8 @@ import './assets/all.scss';
 // eslint-disable-next-line import/order
 import { LoadingPlugin } from 'vue-loading-overlay';
 
+import CKEditor from '@ckeditor/ckeditor5-vue';
+
 import 'vue-loading-overlay/dist/css/index.css';
 import 'bootstrap/dist/js/bootstrap';
 
@@ -22,5 +24,6 @@ app.config.globalProperties.$filters = {
 };
 
 app.use(router);
+app.use(CKEditor);
 app.use(LoadingPlugin);
 app.mount('#app');

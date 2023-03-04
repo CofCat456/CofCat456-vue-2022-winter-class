@@ -109,9 +109,9 @@
 
 <script>
 import Loading from '@/components/Loading.vue';
-import DeleteModal from '@/components/DeleteModal.vue';
+import DeleteModal from '@/components/Modal/DeleteModal.vue';
 
-import { successMsg, errorMsg } from '@/utlis/global';
+import { responseMsg, errorMsg } from '@/utlis/global';
 import { getCartApi, updateCartApi, removeCartApi, removeAllCartApi } from '@/utlis/api';
 
 export default {
@@ -152,20 +152,23 @@ export default {
 
           const {
             data: {
+              success,
               data: { carts, total, final_total: finalTotal }
             }
           } = res;
 
-          this.carts = carts;
-          this.total = total;
-          this.final_total = finalTotal;
+          if (success) {
+            this.carts = carts;
+            this.total = total;
+            this.final_total = finalTotal;
+          }
         })
         .catch((err) => {
           this.$refs.loading.hide();
 
           const { response } = err;
 
-          errorMsg('獲取購物車失敗', response);
+          errorMsg(response);
         });
     },
     updateCart(data) {
@@ -183,10 +186,10 @@ export default {
           this.$refs.loading.hide();
 
           const {
-            data: { message = ' ' }
+            data: { success, message }
           } = res;
 
-          successMsg(message);
+          responseMsg(success, message);
 
           this.getCarts();
         })
@@ -195,17 +198,21 @@ export default {
 
           const { response } = err;
 
-          errorMsg('更新失敗', response);
+          errorMsg(response);
         });
     },
     removeCartItem(id) {
       this.$refs.loading.show();
 
       removeCartApi(id)
-        .then(() => {
+        .then((res) => {
           this.$refs.loading.hide();
 
-          successMsg('移除成功(･8･)！');
+          const {
+            data: { success, message }
+          } = res;
+
+          responseMsg(success, message);
 
           this.getCarts();
         })
@@ -214,17 +221,21 @@ export default {
 
           const { response } = err;
 
-          errorMsg('移除失敗', response);
+          errorMsg(response);
         });
     },
     removeAllCart() {
       this.$refs.loading.show();
 
       removeAllCartApi()
-        .then(() => {
+        .then((res) => {
           this.$refs.loading.hide();
 
-          successMsg('移除成功(′゜ω。‵)！');
+          const {
+            data: { success, message }
+          } = res;
+
+          responseMsg(success, message);
 
           this.getCarts();
         })
@@ -233,7 +244,7 @@ export default {
 
           const { response } = err;
 
-          errorMsg('移除失敗', response);
+          errorMsg(response);
         });
     }
   },

@@ -49,4 +49,12 @@ export const errorMsg = (title, text) =>
     text
   });
 
+export const responseMsg = (success, message) => {
+  if (success) {
+    return successMsg(message);
+  }
+
+  return errorMsg(message);
+};
+
 export default {};

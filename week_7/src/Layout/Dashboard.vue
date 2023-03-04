@@ -17,8 +17,7 @@ export default {
     getHeaderList() {
       return [
         {
-          title: '第六週主線任務',
-          pathName: 'AdminHome'
+          title: '第七週主線任務'
         },
         {
           title: '產品管理',
@@ -31,6 +30,10 @@ export default {
         {
           title: '優惠卷管理',
           pathName: 'AdminCoupons'
+        },
+        {
+          title: '文章管理',
+          pathName: 'AdminArticles'
         }
       ];
     }
