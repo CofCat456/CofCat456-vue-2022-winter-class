@@ -1,0 +1,1 @@
+.card__image img{transition:transform .8s ease 0s}.card__image img:hover{transform:scale(1.2)}.multiline-ellipsis{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden}
