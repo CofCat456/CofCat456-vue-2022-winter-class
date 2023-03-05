@@ -1,5 +1,5 @@
 <template>
-  <HeaderBasic :headerList="getHeaderList" />
+  <HeaderBasic v-if="$route.name !== 'Home'" :headerList="getHeaderList" />
   <RouterView />
 </template>
 
@@ -14,12 +14,16 @@ export default {
     getHeaderList() {
       return [
         {
-          title: '第六週主線任務',
+          title: '第七週主線任務',
           pathName: 'Home'
         },
         {
           title: '產品列表',
           pathName: 'ProductList'
+        },
+        {
+          title: '潮流專欄',
+          pathName: 'ArticleList'
         },
         {
           title: '購物車',
