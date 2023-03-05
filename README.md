@@ -8,6 +8,7 @@
 - [第四週](https://cofcat456.github.io/vue-2022-winter-class/week_4/)
 - [第五週](https://cofcat456.github.io/vue-2022-winter-class/week_5/)
 - [第六週](https://cofcat456.github.io/vue-2022-winter-class/week_6/)
+- [第七週](https://cofcat456.github.io/vue-2022-winter-class/week_7/)
 
 ### **小組任務**
 
