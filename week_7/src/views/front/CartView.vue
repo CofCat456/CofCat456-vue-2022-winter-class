@@ -69,11 +69,30 @@
               <td class="text-end">{{ $filters.currency(total, 'NT ') }}</td>
             </tr>
             <tr v-if="final_total !== total">
-              <td colspan="3" class="text-end text-success">折扣價</td>
+              <td colspan="6" class="text-end text-success">折扣價</td>
               <td class="text-end text-success">{{ $filters.currency(final_total, 'NT ') }}</td>
             </tr>
           </tfoot>
         </table>
+        <div class="input-group my-2">
+          <input
+            style="max-width: 250px"
+            type="text"
+            class="form-control ms-auto"
+            placeholder="請輸入優惠代碼"
+            aria-label="請輸入優惠代碼"
+            aria-describedby="button-addon"
+            v-model="code"
+          />
+          <button
+            class="btn btn-outline-success"
+            type="button"
+            id="button-addon"
+            @click="useCoupon"
+          >
+            套用優惠卷
+          </button>
+        </div>
         <div class="d-grid gap-2 mt-4 d-md-flex justify-content-md-between">
           <RouterLink class="btn btn-outline-info" :to="{ name: 'ProductList' }">
             繼續購物
@@ -112,7 +131,13 @@ import Loading from '@/components/Loading.vue';
 import DeleteModal from '@/components/Modal/DeleteModal.vue';
 
 import { responseMsg, errorMsg } from '@/utlis/global';
-import { getCartApi, updateCartApi, removeCartApi, removeAllCartApi } from '@/utlis/api';
+import {
+  getCartApi,
+  updateCartApi,
+  removeCartApi,
+  removeAllCartApi,
+  useCouponApi
+} from '@/utlis/api';
 
 export default {
   components: {
@@ -124,7 +149,8 @@ export default {
       tempProduct: {},
       carts: [],
       total: 0,
-      final_total: 0
+      final_total: 0,
+      code: ''
     };
   },
   computed: {
@@ -228,6 +254,32 @@ export default {
       this.$refs.loading.show();
 
       removeAllCartApi()
+        .then((res) => {
+          this.$refs.loading.hide();
+
+          const {
+            data: { success, message }
+          } = res;
+
+          responseMsg(success, message);
+
+          this.getCarts();
+        })
+        .catch((err) => {
+          this.$refs.loading.hide();
+
+          const { response } = err;
+
+          errorMsg(response);
+        });
+    },
+    useCoupon() {
+      this.$refs.loading.show();
+
+      const data = { data: { code: this.code } };
+      console.log(this.code);
+
+      useCouponApi(data)
         .then((res) => {
           this.$refs.loading.hide();
 

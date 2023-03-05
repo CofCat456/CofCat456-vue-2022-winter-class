@@ -116,7 +116,7 @@ export default {
 
           errorMsg(response);
 
-          this.$router.push({ name: 'ProductList' });
+          this.$router.go(-1);
         });
     },
     plus() {

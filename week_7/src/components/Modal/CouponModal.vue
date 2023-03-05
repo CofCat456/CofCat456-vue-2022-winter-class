@@ -121,7 +121,10 @@ export default {
     sureHandler() {
       const emitType = this.isNew ? 'add' : 'update';
       this.$emit(`${emitType}-coupon`, {
-        data: this.tempCoupon
+        data: {
+          is_enabled: 0,
+          ...this.tempCoupon
+        }
       });
     }
   }

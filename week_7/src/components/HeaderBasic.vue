@@ -1,5 +1,5 @@
 <template>
-  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <nav class="navbar navbar-expand-lg" :class="light ? ' navbar-light' : 'navbar-dark bg-dark'">
     <div class="container">
       <RouterLink class="navbar-brand m-0" :to="{ name: titleLink.pathName }">{{
         titleLink.title
@@ -37,6 +37,10 @@
 <script>
 export default {
   props: {
+    light: {
+      type: Boolean,
+      default: false
+    },
     headerList: {
       type: Array,
       default: () => []

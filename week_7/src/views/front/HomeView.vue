@@ -144,6 +144,10 @@ export default {
           pathName: 'ProductList'
         },
         {
+          title: '潮流專欄',
+          pathName: 'ArticleList'
+        },
+        {
           title: '購物車',
           pathName: 'Cart'
         },

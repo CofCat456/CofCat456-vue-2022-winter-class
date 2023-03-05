@@ -7,10 +7,11 @@ const { VITE_URL, VITE_PATH } = import.meta.env;
 const loginUrl = `${VITE_URL}/admin/signin`;
 const logoutUrl = `${VITE_URL}/logout`;
 const checkLoginUrl = `${VITE_URL}/api/user/check`;
-const productsUrl = `${VITE_URL}/v2/api/${VITE_PATH}/products`;
 const productUrl = `${VITE_URL}/v2/api/${VITE_PATH}/product`;
 const cartUrl = `${VITE_URL}/api/${VITE_PATH}/cart`;
+const couponUrl = `${VITE_URL}/api/${VITE_PATH}/coupon`;
 const orderUrl = `${VITE_URL}/api/${VITE_PATH}/order`;
+const articleUrl = `${VITE_URL}/api/${VITE_PATH}/article`;
 
 const adminProductUrl = `${VITE_URL}/api/${VITE_PATH}/admin/product`;
 const adminOrderUrl = `${VITE_URL}/api/${VITE_PATH}/admin/order`;
@@ -22,17 +23,20 @@ export const loginApi = (data) => axios.post(loginUrl, data);
 export const logoutApi = () => axios.post(logoutUrl);
 export const getProductApi = (id) => axios.get(`${productUrl}/${id}`);
 export const getCartApi = () => axios.get(cartUrl);
+export const getArticlesApi = () => axios.get(`${articleUrl}s`);
+export const getArticleApi = (id) => axios.get(`${articleUrl}/${id}`);
 export const addToCartApi = (data) => axios.post(cartUrl, data);
+export const useCouponApi = (data) => axios.post(couponUrl, data);
 export const updateCartApi = (id, data) => axios.put(`${cartUrl}/${id}`, data);
 export const removeCartApi = (id) => axios.delete(`${cartUrl}/${id}`);
 export const removeAllCartApi = () => axios.delete(`${cartUrl}s`);
 
 export const getProductsApi = (category) => {
   if (category) {
-    return axios.get(`${productsUrl}?category=${category}`);
+    return axios.get(`${productUrl}s?category=${category}`);
   }
 
-  return axios.get(productsUrl);
+  return axios.get(`${productUrl}s`);
 };
 
 export const checkLoginApi = () => {
