@@ -7,7 +7,7 @@
 import HeaderBasic from '@/components/HeaderBasic.vue';
 
 import { checkLoginApi, logoutApi } from '@/utlis/api';
-import { token, errorMsg, successMsg } from '@/utlis/global';
+import { errorMsg, successMsg } from '@/utlis/global';
 
 export default {
   components: {
@@ -46,11 +46,6 @@ export default {
         this.$router.push({ name: 'Login' });
       });
     },
-    expiredToken() {
-      errorMsg('token 已過期 (′゜ω。‵)');
-
-      this.$router.push({ name: 'Login' });
-    },
     checkLogin() {
       checkLoginApi()
         .then((res) => {
@@ -72,11 +67,6 @@ export default {
     }
   },
   mounted() {
-    if (!token) {
-      this.expiredToken();
-      return;
-    }
-
     this.checkLogin();
   }
 };
